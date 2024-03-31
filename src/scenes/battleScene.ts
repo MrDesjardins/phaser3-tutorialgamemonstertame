@@ -6,8 +6,10 @@ import {
   HEALTH_BAR_ASSET_KEYS,
   MONSTER_ASSET_KEYS,
 } from "../assets/assetKeys";
+import { BattleMenu } from "../battle/ui/menu/battlemenu";
 
 export class BattleScene extends Phaser.Scene {
+  private battleMenu: BattleMenu | undefined = undefined;
   public constructor() {
     // Set a unique name for the scene.
     super({
@@ -90,6 +92,9 @@ export class BattleScene extends Phaser.Scene {
         fontStyle: "italic",
       }),
     ]);
+
+    // Panels
+    this.battleMenu = new BattleMenu(this);
   }
 
   public update(time: number, delta: number): void {}
