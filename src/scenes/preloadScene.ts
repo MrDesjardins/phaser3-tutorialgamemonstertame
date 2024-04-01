@@ -5,6 +5,7 @@ import {
   BATTLE_BACKGROUND_ASSET_KEYS,
   HEALTH_BAR_ASSET_KEYS,
   MONSTER_ASSET_KEYS,
+  UI_ASSET_KEYS,
 } from "../assets/assetKeys";
 
 export class PreloadScene extends Phaser.Scene {
@@ -53,6 +54,12 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(
       MONSTER_ASSET_KEYS.IGUANIGNITE,
       `${monsterTamerAssetPath}/monsters/iguanignite.png`
+    );
+
+    // UI Assets
+    this.load.image(
+      UI_ASSET_KEYS.CURSOR,
+      `${monsterTamerAssetPath}/ui/cursor.png`
     );
   }
 

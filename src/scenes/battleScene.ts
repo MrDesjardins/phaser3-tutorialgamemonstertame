@@ -7,9 +7,12 @@ import {
   MONSTER_ASSET_KEYS,
 } from "../assets/assetKeys";
 import { BattleMenu } from "../battle/ui/menu/battlemenu";
+import { DIRECTION } from "../common/direction";
 
 export class BattleScene extends Phaser.Scene {
   private battleMenu: BattleMenu | undefined = undefined;
+  private cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys | undefined =
+    undefined;
   public constructor() {
     // Set a unique name for the scene.
     super({
@@ -95,9 +98,43 @@ export class BattleScene extends Phaser.Scene {
 
     // Panels
     this.battleMenu = new BattleMenu(this);
+    this.battleMenu.showMainBattleMenu();
+
+    this.cursorKeys = this.input.keyboard?.createCursorKeys();
   }
 
-  public update(time: number, delta: number): void {}
+  public update(time: number, delta: number): void {
+    if (this.cursorKeys) {
+      const wasSpaceKeyJustPressed = Phaser.Input.Keyboard.JustDown(
+        this.cursorKeys.space
+      );
+      if (wasSpaceKeyJustPressed) {
+        this.battleMenu?.handlePlayerInput("OK");
+        return;
+      }
+
+      const wasShiftKeyJustPressed = Phaser.Input.Keyboard.JustDown(
+        this.cursorKeys.shift
+      );
+      if (wasShiftKeyJustPressed) {
+        this.battleMenu?.handlePlayerInput("CANCEL");
+        return;
+      }
+      let selectedDirection: DIRECTION = DIRECTION.NONE;
+      if (this.cursorKeys.left?.isDown) {
+        selectedDirection = DIRECTION.LEFT;
+      } else if (this.cursorKeys.right?.isDown) {
+        selectedDirection = DIRECTION.RIGHT;
+      } else if (this.cursorKeys.up?.isDown) {
+        selectedDirection = DIRECTION.UP;
+      } else if (this.cursorKeys.down?.isDown) {
+        selectedDirection = DIRECTION.DOWN;
+      }
+      if (selectedDirection !== DIRECTION.NONE) {
+        this.battleMenu?.handlePlayerInput(selectedDirection);
+      }
+    }
+  }
 
   private createHealthBar(x: number, y: number): Phaser.GameObjects.Container {
     const scaleY = 0.7;

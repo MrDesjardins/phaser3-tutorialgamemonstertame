@@ -16,3 +16,7 @@ export const HEALTH_BAR_ASSET_KEYS = {
   RIGHT_CAP: "RIGHT_CAP",
   MIDDLE: "MIDDLE",
 } as const;
+
+export const UI_ASSET_KEYS = {
+  CURSOR: "CURSOR",
+} as const;
