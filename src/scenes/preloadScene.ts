@@ -45,6 +45,18 @@ export class PreloadScene extends Phaser.Scene {
       HEALTH_BAR_ASSET_KEYS.RIGHT_CAP,
       `${kenneysAssetPath}/ui-space-expansion/barHorizontal_green_right.png`
     );
+    this.load.image(
+      HEALTH_BAR_ASSET_KEYS.LEFT_CAP_SHADOW,
+      `${kenneysAssetPath}/ui-space-expansion/barHorizontal_shadow_left.png`
+    );
+    this.load.image(
+      HEALTH_BAR_ASSET_KEYS.MIDDLE_SHADOW,
+      `${kenneysAssetPath}/ui-space-expansion/barHorizontal_shadow_mid.png`
+    );
+    this.load.image(
+      HEALTH_BAR_ASSET_KEYS.RIGHT_CAP_SHADOW,
+      `${kenneysAssetPath}/ui-space-expansion/barHorizontal_shadow_right.png`
+    );
 
     // Monsters
     this.load.image(
