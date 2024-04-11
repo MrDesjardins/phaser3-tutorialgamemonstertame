@@ -13,7 +13,7 @@ export class PreloadScene extends Phaser.Scene {
   public constructor() {
     // Set a unique name for the scene.
     super({
-      key: SCENE_KEYS.PRELOAD,
+      key: SCENE_KEYS.PRELOAD_SCENE,
     });
   }
 
@@ -80,7 +80,7 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   public create(): void {
-    this.scene.start(SCENE_KEYS.BATTLE);
+    this.scene.start(SCENE_KEYS.BATTLE_SCENE);
   }
 
   public update(time: number, delta: number): void {}

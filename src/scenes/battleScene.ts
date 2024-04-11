@@ -17,7 +17,7 @@ export class BattleScene extends Phaser.Scene {
   public constructor() {
     // Set a unique name for the scene.
     super({
-      key: SCENE_KEYS.BATTLE,
+      key: SCENE_KEYS.BATTLE_SCENE,
     });
   }
 
@@ -41,7 +41,7 @@ export class BattleScene extends Phaser.Scene {
         assetKey: MONSTER_ASSET_KEYS.CARNODUSK,
         maxHp: 25,
         currentHp: 25,
-        baseAttackValue: 10,
+        baseAttackValue: 15,
         attackIds: [1],
         currentLevel: 5,
         assetFrame: 0,
@@ -55,7 +55,7 @@ export class BattleScene extends Phaser.Scene {
         assetKey: MONSTER_ASSET_KEYS.IGUANIGNITE,
         maxHp: 25,
         currentHp: 25,
-        baseAttackValue: 10,
+        baseAttackValue: 15,
         attackIds: [2, 1],
         currentLevel: 5,
         assetFrame: 0,
@@ -132,24 +132,73 @@ export class BattleScene extends Phaser.Scene {
       ],
       () => {
         this.time.delayedCall(500, () => {
-          this.activeEnemyMonster?.takeDamage(20, () => {
-            this.enemyAttack();
-          });
+          this.activeEnemyMonster?.takeDamage(
+            this.activePlayerMonster?.baseAttack ?? 0,
+            () => {
+              this.enemyAttack();
+            }
+          );
         });
       }
     );
   }
   private enemyAttack(): void {
+    if (this.activeEnemyMonster?.isFainted) {
+      this.postBattleSequenceCheck();
+      return;
+    }
     this.battleMenu?.updateInfoPaneMessagesAndWaitForInput(
       [
         `for ${this.activeEnemyMonster?.name} used ${this.activeEnemyMonster?.attacks[0].name}!`,
       ],
       () => {
         this.time.delayedCall(500, () => {
-          this.activePlayerMonster?.takeDamage(20, () => {
-            this.battleMenu?.showMainBattleMenu();
-          });
+          this.activePlayerMonster?.takeDamage(
+            this.activeEnemyMonster?.baseAttack ?? 0,
+            () => {
+              this.postBattleSequenceCheck();
+            }
+          );
         });
+      }
+    );
+  }
+
+  private postBattleSequenceCheck(): void {
+    if (this.activeEnemyMonster?.isFainted) {
+      this.battleMenu?.updateInfoPaneMessagesAndWaitForInput(
+        [
+          `Wild ${this.activeEnemyMonster?.name} fainted!`,
+          `You have gained some experience`,
+        ],
+        () => {
+          this.transitionToNextScene();
+        }
+      );
+      return;
+    }
+
+    if (this.activePlayerMonster?.isFainted) {
+      this.battleMenu?.updateInfoPaneMessagesAndWaitForInput(
+        [
+          `${this.activePlayerMonster?.name} fainted!`,
+          `You have no more monsters, escaping to safety...`,
+        ],
+        () => {
+          this.transitionToNextScene();
+        }
+      );
+      return;
+    }
+    this.battleMenu?.showMainBattleMenu();
+  }
+
+  private transitionToNextScene(): void {
+    this.cameras.main.fadeOut(600, 0, 0, 0);
+    this.cameras.main.once(
+      Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+      () => {
+        this.scene.start(SCENE_KEYS.BATTLE_SCENE);
       }
     );
   }

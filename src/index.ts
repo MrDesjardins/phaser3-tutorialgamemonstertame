@@ -18,7 +18,7 @@ export const configuration: Phaser.Types.Core.GameConfig = {
 
 const game = new Phaser.Game(configuration);
 
-game.scene.add(SCENE_KEYS.PRELOAD, new PreloadScene());
-game.scene.add(SCENE_KEYS.BATTLE, new BattleScene());
+game.scene.add(SCENE_KEYS.PRELOAD_SCENE, new PreloadScene());
+game.scene.add(SCENE_KEYS.BATTLE_SCENE, new BattleScene());
 
-game.scene.start(SCENE_KEYS.PRELOAD);
+game.scene.start(SCENE_KEYS.PRELOAD_SCENE);
