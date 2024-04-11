@@ -1,4 +1,4 @@
-import { HealthBar } from "../ui/healthbar";
+import { HealthBar } from "../ui/healthBar";
 import {
   Monster,
   BattleMonsterConfig,

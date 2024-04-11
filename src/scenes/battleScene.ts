@@ -3,7 +3,7 @@ import { MONSTER_ASSET_KEYS } from "../assets/assetKeys";
 import { Background } from "../battle/background";
 import { EnemyBattleMonster } from "../battle/monsters/enemyBattleMonster";
 import { PlayerBattleMonster } from "../battle/monsters/playerBattleMonster";
-import { BattleMenu } from "../battle/ui/menu/battlemenu";
+import { BattleMenu } from "../battle/ui/menu/battleMenu";
 import { DIRECTION } from "../common/direction";
 import { SCENE_KEYS } from "./sceneKeys";
 

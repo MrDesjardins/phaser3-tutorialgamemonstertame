@@ -1,4 +1,4 @@
-import { BattleMonster } from "./battlemonster";
+import { BattleMonster } from "./battleMonster";
 import { BattleMonsterConfig, Coordinate } from "../../types/typeDef";
 
 const PLAYER_POSITION: Coordinate = { x: 256, y: 316 } as const;

@@ -1,12 +1,12 @@
 import { MONSTER_ASSET_KEYS, UI_ASSET_KEYS } from "../../../assets/assetKeys";
 import { DIRECTION } from "../../../common/direction";
 import { exhaustiveCheck } from "../../../utils/guard";
-import { BATTLE_UI_TEXT_STYLE } from "./battlemenuconfig";
+import { BATTLE_UI_TEXT_STYLE } from "./battleMenuConfig";
 import {
   BATTLE_MENU_OPTIONS,
   ATTACK_MOVE_OPTIONS,
   ACTIVE_BATTLE_MENU,
-} from "./battlemenuoption";
+} from "./battleMenuOption";
 
 const BATTLE_MENU_CURSOR_POSITIONS = {
   x: 42,
