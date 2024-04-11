@@ -5,7 +5,7 @@ import {
   Coordinate,
   Attack,
 } from "../../types/typeDef";
-import { BATTLE_ASSET_KEYS } from "../../assets/assetKeys";
+import { BATTLE_ASSET_KEYS, DATA_ASSET_KEYS } from "../../assets/assetKeys";
 
 export class BattleMonster {
   protected scene: Phaser.Scene;
@@ -30,6 +30,14 @@ export class BattleMonster {
       this.monsterDetails.assetFrame ?? 0
     );
     this.createHealthBarComponents(config.scaleHealthBarBackgroundImageByY);
+
+    const data: Attack[] = this.scene.cache.json.get(DATA_ASSET_KEYS.ATTACKS);
+    this.monsterDetails.attackIds.forEach((attackId) => {
+      const monsterAttack = data.find((attack) => attack.id === attackId);
+      if (monsterAttack !== undefined) {
+        this.monsterAttacks.push(monsterAttack);
+      }
+    });
   }
 
   public get isFainted(): boolean {
@@ -40,7 +48,7 @@ export class BattleMonster {
     return this.monsterDetails.name;
   }
 
-  public get Attacks(): Attack[] {
+  public get attacks(): Attack[] {
     return [...this.monsterAttacks];
   }
 

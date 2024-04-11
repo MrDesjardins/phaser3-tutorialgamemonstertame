@@ -23,3 +23,7 @@ export const HEALTH_BAR_ASSET_KEYS = {
 export const UI_ASSET_KEYS = {
   CURSOR: "CURSOR",
 } as const;
+
+export const DATA_ASSET_KEYS = {
+  ATTACKS: "ATTACKS",
+} as const;

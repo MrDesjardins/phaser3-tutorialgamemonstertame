@@ -1,6 +1,7 @@
 import { MONSTER_ASSET_KEYS, UI_ASSET_KEYS } from "../../../assets/assetKeys";
 import { DIRECTION } from "../../../common/direction";
 import { exhaustiveCheck } from "../../../utils/guard";
+import { BattleMonster } from "../../monsters/battleMonster";
 import { BATTLE_UI_TEXT_STYLE } from "./battleMenuConfig";
 import {
   BATTLE_MENU_OPTIONS,
@@ -41,8 +42,10 @@ export class BattleMenu {
   private queuedInfoPanelCallback: (() => void) | undefined;
   private waitingForPlayerInput: boolean;
   private selecteAttackIndex: number | undefined;
-  constructor(scene: Phaser.Scene) {
+  private activePlayerMonster: BattleMonster;
+  constructor(scene: Phaser.Scene, activePlayerMonster: BattleMonster) {
     this.scene = scene;
+    this.activePlayerMonster = activePlayerMonster;
     this.selectedBattleMenuOption = BATTLE_MENU_OPTIONS.FIGHT;
     this.selectedAttackMenuOption = ATTACK_MOVE_OPTIONS.MOVE1;
     this.activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MAIN;
@@ -85,6 +88,7 @@ export class BattleMenu {
   }
 
   public hideMonsterAttackSubMenu(): void {
+    this.activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MAIN;
     this.moveSelectionSubBattleMenuPhaserContainerGameObject?.setVisible(false);
   }
 
@@ -205,12 +209,17 @@ export class BattleMenu {
       )
       .setOrigin(0.5)
       .setScale(2.5);
+
+    const attackNames: string[] = [];
+    for (let i = 0; i < 4; i++) {
+      attackNames.push(this.activePlayerMonster.attacks[i]?.name || "-");
+    }
     this.moveSelectionSubBattleMenuPhaserContainerGameObject =
       this.scene.add.container(0, 448, [
-        this.scene.add.text(55, 22, "Slash", BATTLE_UI_TEXT_STYLE),
-        this.scene.add.text(240, 22, "Growl", BATTLE_UI_TEXT_STYLE),
-        this.scene.add.text(55, 70, "-", BATTLE_UI_TEXT_STYLE),
-        this.scene.add.text(240, 70, "-", BATTLE_UI_TEXT_STYLE),
+        this.scene.add.text(55, 22, attackNames[0], BATTLE_UI_TEXT_STYLE),
+        this.scene.add.text(240, 22, attackNames[1], BATTLE_UI_TEXT_STYLE),
+        this.scene.add.text(55, 70, attackNames[2], BATTLE_UI_TEXT_STYLE),
+        this.scene.add.text(240, 70, attackNames[3], BATTLE_UI_TEXT_STYLE),
         this.attackBattleMenuCursorPhaserGameObject,
       ]);
     this.hideMonsterAttackSubMenu();

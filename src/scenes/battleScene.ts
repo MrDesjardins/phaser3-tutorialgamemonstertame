@@ -13,6 +13,7 @@ export class BattleScene extends Phaser.Scene {
     undefined;
   private activeEnemyMonster: EnemyBattleMonster | undefined = undefined;
   private activePlayerMonster: PlayerBattleMonster | undefined = undefined;
+  private activePlayerAttackIndex: number = -1;
   public constructor() {
     // Set a unique name for the scene.
     super({
@@ -41,7 +42,7 @@ export class BattleScene extends Phaser.Scene {
         maxHp: 25,
         currentHp: 25,
         baseAttackValue: 10,
-        attackIds: [],
+        attackIds: [1],
         currentLevel: 5,
         assetFrame: 0,
       },
@@ -55,23 +56,17 @@ export class BattleScene extends Phaser.Scene {
         maxHp: 25,
         currentHp: 25,
         baseAttackValue: 10,
-        attackIds: [],
+        attackIds: [2, 1],
         currentLevel: 5,
         assetFrame: 0,
       },
     });
 
     // Panels
-    this.battleMenu = new BattleMenu(this);
+    this.battleMenu = new BattleMenu(this, this.activePlayerMonster);
     this.battleMenu.showMainBattleMenu();
 
     this.cursorKeys = this.input.keyboard?.createCursorKeys();
-
-    this.activeEnemyMonster.takeDamage(20, () => {
-      if (this.activePlayerMonster) {
-        this.activePlayerMonster.takeDamage(15);
-      }
-    });
   }
 
   public update(time: number, delta: number): void {
@@ -85,16 +80,19 @@ export class BattleScene extends Phaser.Scene {
         if (this.battleMenu?.selectedAttack === undefined) {
           return;
         } else {
+          this.activePlayerAttackIndex = this.battleMenu?.selectedAttack;
+          if (
+            this.activePlayerMonster?.attacks[this.activePlayerAttackIndex] ===
+            undefined
+          ) {
+            // Invalid
+            return;
+          }
           console.log(
             `Player selected the following move ${this.battleMenu?.selectedAttack}`
           );
           this.battleMenu.hideMonsterAttackSubMenu();
-          this.battleMenu.updateInfoPaneMessagesAndWaitForInput(
-            ["Your monster attacks the enemy!"],
-            (): void => {
-              this.battleMenu?.showMainBattleMenu();
-            }
-          );
+          this.handleBattleSequence();
         }
       }
 
@@ -119,5 +117,40 @@ export class BattleScene extends Phaser.Scene {
         this.battleMenu?.handlePlayerInput(selectedDirection);
       }
     }
+  }
+
+  private handleBattleSequence(): void {
+    this.playerAttack();
+  }
+
+  private playerAttack(): void {
+    this.battleMenu?.updateInfoPaneMessagesAndWaitForInput(
+      [
+        `${this.activePlayerMonster?.name} used ${
+          this.activePlayerMonster?.attacks[this.activePlayerAttackIndex].name
+        }!`,
+      ],
+      () => {
+        this.time.delayedCall(500, () => {
+          this.activeEnemyMonster?.takeDamage(20, () => {
+            this.enemyAttack();
+          });
+        });
+      }
+    );
+  }
+  private enemyAttack(): void {
+    this.battleMenu?.updateInfoPaneMessagesAndWaitForInput(
+      [
+        `for ${this.activeEnemyMonster?.name} used ${this.activeEnemyMonster?.attacks[0].name}!`,
+      ],
+      () => {
+        this.time.delayedCall(500, () => {
+          this.activePlayerMonster?.takeDamage(20, () => {
+            this.battleMenu?.showMainBattleMenu();
+          });
+        });
+      }
+    );
   }
 }

@@ -20,7 +20,7 @@ export interface Coordinate {
 }
 
 export interface Attack {
-  id: string;
+  id: number;
   name: string;
   animationName: String;
 }
