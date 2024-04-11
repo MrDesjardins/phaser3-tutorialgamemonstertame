@@ -1,7 +1,8 @@
 import Phaser from "phaser";
-import { BATTLE_ASSET_KEYS, MONSTER_ASSET_KEYS } from "../assets/assetKeys";
+import { MONSTER_ASSET_KEYS } from "../assets/assetKeys";
 import { Background } from "../battle/background";
-import { HealthBar } from "../battle/ui/healthbar";
+import { EnemyBattleMonster } from "../battle/monsters/enemyBattleMonster";
+import { PlayerBattleMonster } from "../battle/monsters/playerBattleMonster";
 import { BattleMenu } from "../battle/ui/menu/battlemenu";
 import { DIRECTION } from "../common/direction";
 import { SCENE_KEYS } from "./sceneKeys";
@@ -10,6 +11,8 @@ export class BattleScene extends Phaser.Scene {
   private battleMenu: BattleMenu | undefined = undefined;
   private cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys | undefined =
     undefined;
+  private activeEnemyMonster: EnemyBattleMonster | undefined = undefined;
+  private activePlayerMonster: PlayerBattleMonster | undefined = undefined;
   public constructor() {
     // Set a unique name for the scene.
     super({
@@ -30,77 +33,45 @@ export class BattleScene extends Phaser.Scene {
     background.showForest();
 
     // Create player and enemy monsters
-    this.add.image(768, 144, MONSTER_ASSET_KEYS.CARNODUSK, 0);
-    this.add.image(256, 316, MONSTER_ASSET_KEYS.IGUANIGNITE, 0).setFlipX(true);
-    const playerHealthBar = new HealthBar(this, 34, 34);
-    // Health Bar
-    const playerMonsterName = this.add.text(
-      30,
-      20,
-      MONSTER_ASSET_KEYS.IGUANIGNITE,
-      {
-        color: "#7E3D3F",
-        fontSize: "32px",
-      }
-    );
-    this.add.container(516, 318, [
-      this.add
-        .image(0, 0, BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND)
-        .setOrigin(0),
-      playerMonsterName,
-      playerHealthBar.container,
-      this.add.text(playerMonsterName.width + 35, 23, "L5", {
-        color: "#ED474B",
-        fontSize: "28px",
-      }),
-      this.add.text(30, 55, "HP", {
-        color: "#FF6505",
-        fontSize: "24px",
-        fontStyle: "italic",
-      }),
-      this.add
-        .text(443, 80, "25/25", {
-          color: "#7E3D3F",
-          fontSize: "16px",
-          fontStyle: "italic",
-        })
-        .setOrigin(1, 0),
-    ]);
+    this.activeEnemyMonster = new EnemyBattleMonster({
+      scene: this,
+      monsterDetails: {
+        name: MONSTER_ASSET_KEYS.CARNODUSK,
+        assetKey: MONSTER_ASSET_KEYS.CARNODUSK,
+        maxHp: 25,
+        currentHp: 25,
+        baseAttackValue: 10,
+        attackIds: [],
+        currentLevel: 5,
+        assetFrame: 0,
+      },
+    });
 
-    const enemyHealthBar = new HealthBar(this, 34, 34);
-    const enemyMonsterName = this.add.text(
-      30,
-      20,
-      MONSTER_ASSET_KEYS.CARNODUSK,
-      {
-        color: "#7E3D3F",
-        fontSize: "32px",
-      }
-    );
-    this.add.container(0, 0, [
-      this.add
-        .image(0, 0, BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND)
-        .setOrigin(0)
-        .setScale(1, 0.8),
-      enemyMonsterName,
-      enemyHealthBar.container,
-      this.add.text(enemyMonsterName.width + 35, 23, "L5", {
-        color: "#ED474B",
-        fontSize: "28px",
-      }),
-      this.add.text(30, 55, "HP", {
-        color: "#FF6505",
-        fontSize: "24px",
-        fontStyle: "italic",
-      }),
-    ]);
+    this.activePlayerMonster = new PlayerBattleMonster({
+      scene: this,
+      monsterDetails: {
+        name: MONSTER_ASSET_KEYS.IGUANIGNITE,
+        assetKey: MONSTER_ASSET_KEYS.IGUANIGNITE,
+        maxHp: 25,
+        currentHp: 25,
+        baseAttackValue: 10,
+        attackIds: [],
+        currentLevel: 5,
+        assetFrame: 0,
+      },
+    });
 
     // Panels
     this.battleMenu = new BattleMenu(this);
     this.battleMenu.showMainBattleMenu();
 
     this.cursorKeys = this.input.keyboard?.createCursorKeys();
-    playerHealthBar.setMeterPercentageAnimated(0.5, { duration: 3000 });
+
+    this.activeEnemyMonster.takeDamage(20, () => {
+      if (this.activePlayerMonster) {
+        this.activePlayerMonster.takeDamage(15);
+      }
+    });
   }
 
   public update(time: number, delta: number): void {
