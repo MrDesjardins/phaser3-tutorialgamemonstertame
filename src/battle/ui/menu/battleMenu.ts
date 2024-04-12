@@ -19,6 +19,9 @@ const ATTACK_MENU_CURSOR_POSITIONS = {
   y: 38,
 } as const;
 
+const PLAYER_INPUT_CURSOR_POSITIONS = {
+  y: 488,
+} as const;
 export class BattleMenu {
   private scene: Phaser.Scene;
   private mainBattleMenuPhaserContainerGameObject:
@@ -43,6 +46,10 @@ export class BattleMenu {
   private waitingForPlayerInput: boolean;
   private selecteAttackIndex: number | undefined;
   private activePlayerMonster: BattleMonster;
+  private userInputCursorPhaserImageGameObject:
+    | Phaser.GameObjects.Image
+    | undefined;
+  private userInputCursorPhaserTween: Phaser.Tweens.Tween | undefined;
   constructor(scene: Phaser.Scene, activePlayerMonster: BattleMonster) {
     this.scene = scene;
     this.activePlayerMonster = activePlayerMonster;
@@ -56,6 +63,7 @@ export class BattleMenu {
     this.waitingForPlayerInput = false;
     this.queuedInfoPanelCallback = undefined;
     this.selecteAttackIndex = undefined;
+    this.createPlayerInputCursor();
   }
   public showMainBattleMenu(): void {
     this.activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MAIN;
@@ -92,6 +100,21 @@ export class BattleMenu {
     this.moveSelectionSubBattleMenuPhaserContainerGameObject?.setVisible(false);
   }
 
+  public playInputCursorAnimation(): void {
+    this.userInputCursorPhaserImageGameObject?.setPosition(
+      (this.battleTextGameObjectLine1?.displayWidth ?? 0) +
+        this.userInputCursorPhaserImageGameObject.displayWidth * 2,
+      this.userInputCursorPhaserImageGameObject.y
+    );
+    this.userInputCursorPhaserImageGameObject?.setVisible(true);
+    this.userInputCursorPhaserTween?.restart();
+  }
+
+  public hideInputCursor(): void {
+    this.userInputCursorPhaserImageGameObject?.setVisible(false);
+    this.userInputCursorPhaserTween?.pause();
+  }
+
   public handlePlayerInput(input: "OK" | "CANCEL" | DIRECTION): void {
     if (this.waitingForPlayerInput && (input === "CANCEL" || input === "OK")) {
       this.updateInfoPaneWithMessage();
@@ -117,6 +140,17 @@ export class BattleMenu {
     this.moveSelectedBattleMenuCursor();
   }
 
+  public updateInfoPaneMessagesNoInputRequired(
+    message: string,
+    callback?: () => void
+  ): void {
+    this.battleTextGameObjectLine1?.setText("").setVisible(true);
+    this.battleTextGameObjectLine1?.setText(message);
+    this.waitingForPlayerInput = false;
+    if (callback !== undefined) {
+      callback();
+    }
+  }
   public updateInfoPaneMessagesAndWaitForInput(
     messages: string[],
     callback?: () => void
@@ -129,6 +163,7 @@ export class BattleMenu {
   private updateInfoPaneWithMessage(): void {
     this.waitingForPlayerInput = false;
     this.battleTextGameObjectLine1?.setText("").setVisible(true);
+    this.hideInputCursor();
 
     if (this.queuedInfoPanelMessages.length === 0) {
       this.queuedInfoPanelCallback?.();
@@ -140,6 +175,7 @@ export class BattleMenu {
     if (messageToDisplay !== undefined) {
       this.battleTextGameObjectLine1?.setText(messageToDisplay);
       this.waitingForPlayerInput = true;
+      this.playInputCursorAnimation();
     }
   }
   private createMainBattleMenu(): void {
@@ -421,6 +457,8 @@ export class BattleMenu {
   }
 
   private switchToMainBattleMenu(): void {
+    this.waitingForPlayerInput = false;
+    this.hideInputCursor();
     this.hideMonsterAttackSubMenu();
     this.showMainBattleMenu();
   }
@@ -489,5 +527,26 @@ export class BattleMenu {
         exhaustiveCheck(this.selectedAttackMenuOption);
     }
     this.selecteAttackIndex = selectedMoveIndex;
+  }
+
+  private createPlayerInputCursor(): void {
+    this.userInputCursorPhaserImageGameObject = this.scene.add
+      .image(0, 0, UI_ASSET_KEYS.CURSOR, 0)
+      .setAngle(90)
+      .setScale(2.5, 1.25)
+      .setVisible(false);
+    this.userInputCursorPhaserTween = this.scene.tweens.add({
+      targets: this.userInputCursorPhaserImageGameObject,
+      y: {
+        from: PLAYER_INPUT_CURSOR_POSITIONS.y,
+        start: PLAYER_INPUT_CURSOR_POSITIONS.y,
+        to: PLAYER_INPUT_CURSOR_POSITIONS.y + 6,
+      },
+      delay: 0,
+      duration: 600,
+      repeat: -1,
+      yoyo:true
+    });
+    this.userInputCursorPhaserTween.pause();
   }
 }
