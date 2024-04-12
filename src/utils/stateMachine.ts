@@ -23,9 +23,8 @@ export class StateMachine {
 
   public update(): void {
     if (this.changingStateQueue.length > 0) {
-      this.isChangingState = true;
       const nextState = this.changingStateQueue.shift();
-      if (nextState) {
+      if (nextState !== undefined) {
         this.setState(nextState);
       }
     }
