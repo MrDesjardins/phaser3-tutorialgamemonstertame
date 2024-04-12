@@ -6,6 +6,7 @@ import { PlayerBattleMonster } from "../battle/monsters/playerBattleMonster";
 import { BattleMenu } from "../battle/ui/menu/battleMenu";
 import { DIRECTION } from "../common/direction";
 import { SCENE_KEYS } from "./sceneKeys";
+import { StateMachine } from "../utils/stateMachine";
 
 export class BattleScene extends Phaser.Scene {
   private battleMenu: BattleMenu | undefined = undefined;
@@ -14,6 +15,7 @@ export class BattleScene extends Phaser.Scene {
   private activeEnemyMonster: EnemyBattleMonster | undefined = undefined;
   private activePlayerMonster: PlayerBattleMonster | undefined = undefined;
   private activePlayerAttackIndex: number = -1;
+  private battleStateMachine: StateMachine;
   public constructor() {
     // Set a unique name for the scene.
     super({
@@ -65,6 +67,21 @@ export class BattleScene extends Phaser.Scene {
     // Panels
     this.battleMenu = new BattleMenu(this, this.activePlayerMonster);
     this.battleMenu.showMainBattleMenu();
+
+    this.battleStateMachine = new StateMachine("battle", this);
+    this.battleStateMachine.addState({
+      name: "INTRO",
+      onEnter: () => {
+        this.time.delayedCall(1000, () => {
+          this.battleStateMachine.setState("BATTLE");
+        });
+      },
+    });
+    this.battleStateMachine.addState({
+      name: "BATTLE",
+      onEnter: () => {},
+    });
+    this.battleStateMachine.setState("INTRO");
 
     this.cursorKeys = this.input.keyboard?.createCursorKeys();
   }
