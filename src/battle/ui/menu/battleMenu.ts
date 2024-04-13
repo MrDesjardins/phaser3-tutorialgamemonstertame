@@ -1,6 +1,7 @@
 import { MONSTER_ASSET_KEYS, UI_ASSET_KEYS } from "../../../assets/assetKeys";
 import { DIRECTION } from "../../../common/direction";
 import { exhaustiveCheck } from "../../../utils/guard";
+import { animateText } from "../../../utils/textUtils";
 import { BattleMonster } from "../../monsters/battleMonster";
 import { BATTLE_UI_TEXT_STYLE } from "./battleMenuConfig";
 import {
@@ -50,6 +51,8 @@ export class BattleMenu {
     | Phaser.GameObjects.Image
     | undefined;
   private userInputCursorPhaserTween: Phaser.Tweens.Tween | undefined;
+  private queuedMessagesSkipAnimation: boolean = false;
+  private queuedMessageAnimationPlaying: boolean = false;
   constructor(scene: Phaser.Scene, activePlayerMonster: BattleMonster) {
     this.scene = scene;
     this.activePlayerMonster = activePlayerMonster;
@@ -116,6 +119,10 @@ export class BattleMenu {
   }
 
   public handlePlayerInput(input: "OK" | "CANCEL" | DIRECTION): void {
+    if (this.queuedMessageAnimationPlaying && input === "OK") {
+      return;
+    }
+
     if (this.waitingForPlayerInput && (input === "CANCEL" || input === "OK")) {
       this.updateInfoPaneWithMessage();
       return;
@@ -142,21 +149,38 @@ export class BattleMenu {
 
   public updateInfoPaneMessagesNoInputRequired(
     message: string,
-    callback?: () => void
+    callback?: () => void,
+    skipAnimation: boolean = false
   ): void {
-    this.battleTextGameObjectLine1?.setText("").setVisible(true);
-    this.battleTextGameObjectLine1?.setText(message);
-    this.waitingForPlayerInput = false;
-    if (callback !== undefined) {
-      callback();
+    if (this.battleTextGameObjectLine1) {
+      this.battleTextGameObjectLine1.setText("").setVisible(true);
+      if (skipAnimation) {
+        this.battleTextGameObjectLine1.setText(message);
+        this.waitingForPlayerInput = false;
+        if (callback !== undefined) {
+          callback();
+        }
+      } else {
+        animateText(this.scene, this.battleTextGameObjectLine1, message, {
+          delay: 50,
+          callback: () => {
+            this, (this.waitingForPlayerInput = false);
+            if (callback !== undefined) {
+              callback();
+            }
+          },
+        });
+      }
     }
   }
   public updateInfoPaneMessagesAndWaitForInput(
     messages: string[],
-    callback?: () => void
+    callback?: () => void,
+    skipAnimation: boolean = false
   ): void {
     this.queuedInfoPanelMessages = messages;
     this.queuedInfoPanelCallback = callback;
+    this.queuedMessagesSkipAnimation = skipAnimation;
 
     this.updateInfoPaneWithMessage();
   }
@@ -172,10 +196,31 @@ export class BattleMenu {
     }
 
     const messageToDisplay = this.queuedInfoPanelMessages.shift();
-    if (messageToDisplay !== undefined) {
-      this.battleTextGameObjectLine1?.setText(messageToDisplay);
-      this.waitingForPlayerInput = true;
-      this.playInputCursorAnimation();
+    if (this.battleTextGameObjectLine1) {
+      if (messageToDisplay !== undefined) {
+        if (this.queuedMessagesSkipAnimation) {
+          this.battleTextGameObjectLine1?.setText(messageToDisplay);
+          this.queuedMessageAnimationPlaying = false;
+          this.waitingForPlayerInput = true;
+          this.queuedInfoPanelCallback?.();
+          this.queuedInfoPanelCallback = undefined;
+          return;
+        }
+        this.queuedMessageAnimationPlaying = true;
+        animateText(
+          this.scene,
+          this.battleTextGameObjectLine1,
+          messageToDisplay,
+          {
+            delay: 50,
+            callback: () => {
+              this.playInputCursorAnimation();
+              this.waitingForPlayerInput = true;
+              this.queuedMessageAnimationPlaying = false;
+            },
+          }
+        );
+      }
     }
   }
   private createMainBattleMenu(): void {
@@ -545,7 +590,7 @@ export class BattleMenu {
       delay: 0,
       duration: 600,
       repeat: -1,
-      yoyo:true
+      yoyo: true,
     });
     this.userInputCursorPhaserTween.pause();
   }
