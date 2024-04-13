@@ -36,4 +36,4 @@ The TypeScript and ViteJS setup was based on the following repository: [phaser3-
 
 ## Tutorial Progress:
 
-https://www.youtube.com/watch?v=04cS6emUasw&list=PLmcXe0-sfoSgq-pyXrFx0GZjHbvoVUW8t&index=25
+https://www.youtube.com/watch?v=xeaSPQNsT9g&list=PLmcXe0-sfoSgq-pyXrFx0GZjHbvoVUW8t&index=30
