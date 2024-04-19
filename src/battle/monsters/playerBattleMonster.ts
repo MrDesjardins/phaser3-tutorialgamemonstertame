@@ -1,5 +1,6 @@
 import { BattleMonster } from "./battleMonster";
 import { BattleMonsterConfig, Coordinate } from "../../types/typeDef";
+import { KENNEY_FUTURE_NARROW_FONT_NAME } from "../../assets/fontKeys";
 
 const PLAYER_POSITION: Coordinate = { x: 256, y: 316 } as const;
 export class PlayerBattleMonster extends BattleMonster {
@@ -21,7 +22,11 @@ export class PlayerBattleMonster extends BattleMonster {
   }
   public addHealthBarComponents(): void {
     this.healthBarTextGameObject = this.scene.add
-      .text(443, 80, ``, {})
+      .text(443, 80, ``, {
+        fontFamily: KENNEY_FUTURE_NARROW_FONT_NAME,
+        color: "#7E3D3F",
+        fontSize: "16px",
+      })
       .setOrigin(1, 0);
     this.setHealthBarText();
     this.phaserHealthBarGameContainer.add(this.healthBarTextGameObject);

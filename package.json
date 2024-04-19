@@ -20,8 +20,12 @@
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-replace": "^5.0.5",
     "@types/node": "^20.11.30",
+    "@types/webfontloader": "^1.6.38",
     "phaser": "^3.80.1",
     "typescript": "^5.4.3",
     "vite": "^5.2.4"
+  },
+  "dependencies": {
+    "webfontloader": "^1.6.28"
   }
 }

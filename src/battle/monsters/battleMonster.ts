@@ -7,6 +7,7 @@ import {
 } from "../../types/typeDef";
 import { BATTLE_ASSET_KEYS } from "../../assets/assetKeys";
 import { DataUtils } from "../../utils/dataUtils";
+import { KENNEY_FUTURE_NARROW_FONT_NAME } from "../../assets/fontKeys";
 
 export class BattleMonster {
   protected scene: Phaser.Scene;
@@ -108,6 +109,7 @@ export class BattleMonster {
   ): void {
     this.healthBar = new HealthBar(this.scene, 34, 34);
     const monsterNameGameText = this.scene.add.text(30, 20, this.name, {
+      fontFamily: KENNEY_FUTURE_NARROW_FONT_NAME,
       color: "#7E3D3F",
       fontSize: "32px",
     });
@@ -122,12 +124,14 @@ export class BattleMonster {
       23,
       `L${this.level}`,
       {
+        fontFamily: KENNEY_FUTURE_NARROW_FONT_NAME,
         color: "#ED474B",
         fontSize: "28px",
       }
     );
 
     const monsterHpText = this.scene.add.text(30, 55, "HP", {
+      fontFamily: KENNEY_FUTURE_NARROW_FONT_NAME,
       color: "#FF6505",
       fontSize: "24px",
       fontStyle: "italic",

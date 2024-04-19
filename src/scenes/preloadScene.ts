@@ -8,7 +8,8 @@ import {
   MONSTER_ASSET_KEYS,
   UI_ASSET_KEYS,
 } from "../assets/assetKeys";
-
+import * as WebFont from "webfontloader";
+import { KENNEY_FUTURE_NARROW_FONT_NAME } from "../assets/fontKeys";
 export class PreloadScene extends Phaser.Scene {
   public constructor() {
     // Set a unique name for the scene.
@@ -80,7 +81,15 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   public create(): void {
-    this.scene.start(SCENE_KEYS.BATTLE_SCENE);
+    WebFont.load({
+      custom: {
+        families: [KENNEY_FUTURE_NARROW_FONT_NAME],
+      },
+      active: () => {
+        console.log("Font loaded");
+        this.scene.start(SCENE_KEYS.BATTLE_SCENE);
+      },
+    });
   }
 
   public update(time: number, delta: number): void {}
