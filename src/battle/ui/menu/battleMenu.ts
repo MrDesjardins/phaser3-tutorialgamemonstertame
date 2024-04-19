@@ -1,5 +1,6 @@
 import { MONSTER_ASSET_KEYS, UI_ASSET_KEYS } from "../../../assets/assetKeys";
 import { DIRECTION } from "../../../common/direction";
+import { SKIP_BATTLE_ANIMATIONS } from "../../../config";
 import { exhaustiveCheck } from "../../../utils/guard";
 import { animateText } from "../../../utils/textUtils";
 import { BattleMonster } from "../../monsters/battleMonster";
@@ -202,8 +203,7 @@ export class BattleMenu {
           this.battleTextGameObjectLine1?.setText(messageToDisplay);
           this.queuedMessageAnimationPlaying = false;
           this.waitingForPlayerInput = true;
-          this.queuedInfoPanelCallback?.();
-          this.queuedInfoPanelCallback = undefined;
+          this.playInputCursorAnimation(); 
           return;
         }
         this.queuedMessageAnimationPlaying = true;
@@ -521,7 +521,8 @@ export class BattleMenu {
           ["You have no other monster in your party."],
           (): void => {
             this.switchToMainBattleMenu();
-          }
+          },
+          SKIP_BATTLE_ANIMATIONS
         );
         break;
       }
@@ -531,7 +532,8 @@ export class BattleMenu {
           ["Your bag is empty..."],
           (): void => {
             this.switchToMainBattleMenu();
-          }
+          },
+          SKIP_BATTLE_ANIMATIONS
         );
         break;
       }
@@ -541,7 +543,8 @@ export class BattleMenu {
           ["You failed to run away..."],
           (): void => {
             this.switchToMainBattleMenu();
-          }
+          },
+          SKIP_BATTLE_ANIMATIONS
         );
         break;
       }

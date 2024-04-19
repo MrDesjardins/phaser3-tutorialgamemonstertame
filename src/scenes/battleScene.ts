@@ -7,6 +7,7 @@ import { BattleMenu } from "../battle/ui/menu/battleMenu";
 import { DIRECTION } from "../common/direction";
 import { SCENE_KEYS } from "./sceneKeys";
 import { StateMachine } from "../utils/stateMachine";
+import { SKIP_BATTLE_ANIMATIONS } from "../config";
 
 const BATTLE_STATES = {
   INTRO: "INTRO",
@@ -60,6 +61,7 @@ export class BattleScene extends Phaser.Scene {
         currentLevel: 5,
         assetFrame: 0,
       },
+      skipBattleAnimations: SKIP_BATTLE_ANIMATIONS,
     });
 
     this.activePlayerMonster = new PlayerBattleMonster({
@@ -74,6 +76,7 @@ export class BattleScene extends Phaser.Scene {
         currentLevel: 5,
         assetFrame: 0,
       },
+      skipBattleAnimations: SKIP_BATTLE_ANIMATIONS,
     });
 
     // Panels
@@ -167,7 +170,8 @@ export class BattleScene extends Phaser.Scene {
             );
           });
         });
-      }
+      },
+      SKIP_BATTLE_ANIMATIONS
     );
   }
   private enemyAttack(): void {
@@ -190,7 +194,8 @@ export class BattleScene extends Phaser.Scene {
             );
           });
         });
-      }
+      },
+      SKIP_BATTLE_ANIMATIONS
     );
   }
 
@@ -204,7 +209,8 @@ export class BattleScene extends Phaser.Scene {
           ],
           () => {
             this.battleStateMachine.setState(BATTLE_STATES.FINISHED);
-          }
+          },
+          SKIP_BATTLE_ANIMATIONS
         );
       });
       return;
@@ -219,7 +225,8 @@ export class BattleScene extends Phaser.Scene {
           ],
           () => {
             this.battleStateMachine.setState(BATTLE_STATES.FINISHED);
-          }
+          },
+          SKIP_BATTLE_ANIMATIONS
         );
       });
       return;
@@ -261,7 +268,8 @@ export class BattleScene extends Phaser.Scene {
             ],
             () => {
               this.battleStateMachine.setState(BATTLE_STATES.BRING_OUT_MONSTER);
-            }
+            },
+            SKIP_BATTLE_ANIMATIONS
           );
         });
       },
@@ -279,7 +287,8 @@ export class BattleScene extends Phaser.Scene {
               this.time.delayedCall(1200, () => {
                 this.battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT);
               });
-            }
+            },
+            SKIP_BATTLE_ANIMATIONS
           );
         });
       },
@@ -322,7 +331,8 @@ export class BattleScene extends Phaser.Scene {
           ["You got away safely!"],
           () => {
             this.battleStateMachine.setState(BATTLE_STATES.FINISHED);
-          }
+          },
+          SKIP_BATTLE_ANIMATIONS
         );
       },
     });

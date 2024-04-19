@@ -18,12 +18,14 @@ export class BattleMonster {
   protected maxHealth: number = 0;
   protected monsterAttacks: Attack[] = [];
   protected phaserHealthBarGameContainer: Phaser.GameObjects.Container;
+  protected skipBattleAnimations: boolean;
   public constructor(config: BattleMonsterConfig, position: Coordinate) {
     this.scene = config.scene;
     this.monsterDetails = config.monsterDetails;
     this.currentHealth = this.monsterDetails.currentHp;
     this.maxHealth = this.monsterDetails.maxHp;
     this.monsterAttacks = [];
+    this.skipBattleAnimations = config.skipBattleAnimations;
     this.phaserGameObject = this.scene.add
       .image(
         position.x,
@@ -78,6 +80,11 @@ export class BattleMonster {
   public playMonsterHealthbarAppearAnimation(callback: () => void): void {}
 
   public playTakeDamageAnimation(callback: () => void): void {
+    if (this.skipBattleAnimations) {
+      this.phaserGameObject.setAlpha(1);
+      callback();
+      return;
+    }
     this.scene.tweens.add({
       delay: 0,
       duration: 150,
