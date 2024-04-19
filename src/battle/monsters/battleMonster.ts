@@ -24,12 +24,14 @@ export class BattleMonster {
     this.currentHealth = this.monsterDetails.currentHp;
     this.maxHealth = this.monsterDetails.maxHp;
     this.monsterAttacks = [];
-    this.phaserGameObject = this.scene.add.image(
-      position.x,
-      position.y,
-      this.monsterDetails.assetKey,
-      this.monsterDetails.assetFrame ?? 0
-    );
+    this.phaserGameObject = this.scene.add
+      .image(
+        position.x,
+        position.y,
+        this.monsterDetails.assetKey,
+        this.monsterDetails.assetFrame ?? 0
+      )
+      .setAlpha(0);
     this.createHealthBarComponents(config.scaleHealthBarBackgroundImageByY);
 
     this.monsterDetails.attackIds.forEach((attackId) => {
@@ -71,6 +73,29 @@ export class BattleMonster {
     );
   }
 
+  public playMonsterAppearAnimation(callback: () => void): void {}
+
+  public playMonsterHealthbarAppearAnimation(callback: () => void): void {}
+
+  public playTakeDamageAnimation(callback: () => void): void {
+    this.scene.tweens.add({
+      delay: 0,
+      duration: 150,
+      alpha: {
+        from: 1,
+        start: 1,
+        to: 0,
+      },
+      repeat: 10,
+      targets: this.phaserGameObject,
+      onComplete: () => {
+        this.phaserGameObject.setAlpha(1);
+        callback();
+      },
+    });
+  }
+  public playDeathAnimation(callback: () => void): void {}
+
   protected createHealthBarComponents(
     scaleHealthBarBackgroundImageByY: number = 1
   ): void {
@@ -101,12 +126,14 @@ export class BattleMonster {
       fontStyle: "italic",
     });
 
-    this.phaserHealthBarGameContainer = this.scene.add.container(0, 0, [
-      healthBarBackgroundImage,
-      monsterNameGameText,
-      this.healthBar.container,
-      monsterHealthBarLevelText,
-      monsterHpText,
-    ]);
+    this.phaserHealthBarGameContainer = this.scene.add
+      .container(0, 0, [
+        healthBarBackgroundImage,
+        monsterNameGameText,
+        this.healthBar.container,
+        monsterHealthBarLevelText,
+        monsterHpText,
+      ])
+      .setAlpha(0);
   }
 }
