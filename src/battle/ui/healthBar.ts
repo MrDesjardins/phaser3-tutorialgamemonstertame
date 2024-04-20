@@ -14,7 +14,7 @@ export class HealthBar {
   public constructor(
     private scene: Phaser.Scene,
     private x: number,
-    private y: number
+    private y: number,
   ) {
     this.scene = scene;
     this.fullWidth = 360;
@@ -29,25 +29,14 @@ export class HealthBar {
     return this.healthBarContainer;
   }
   private createHealthBar(): void {
-    this.leftCap = this.scene.add
-      .image(this.x, this.y, HEALTH_BAR_ASSET_KEYS.LEFT_CAP)
-      .setOrigin(0, 0.5)
-      .setScale(1, this.scaleY);
+    this.leftCap = this.scene.add.image(this.x, this.y, HEALTH_BAR_ASSET_KEYS.LEFT_CAP).setOrigin(0, 0.5).setScale(1, this.scaleY);
     this.middle = this.scene.add
-      .image(
-        this.leftCap.x + this.leftCap.width,
-        this.y,
-        HEALTH_BAR_ASSET_KEYS.MIDDLE
-      )
+      .image(this.leftCap.x + this.leftCap.width, this.y, HEALTH_BAR_ASSET_KEYS.MIDDLE)
       .setOrigin(0, 0.5)
       .setScale(1, this.scaleY);
     this.middle.displayWidth = this.fullWidth; // Stretch using a value
     this.rightCap = this.scene.add
-      .image(
-        this.middle.x + this.middle.displayWidth,
-        this.y,
-        HEALTH_BAR_ASSET_KEYS.RIGHT_CAP
-      )
+      .image(this.middle.x + this.middle.displayWidth, this.y, HEALTH_BAR_ASSET_KEYS.RIGHT_CAP)
       .setOrigin(0, 0.5)
       .setScale(1, this.scaleY);
 
@@ -72,33 +61,18 @@ export class HealthBar {
       .setOrigin(0, 0.5)
       .setScale(1, this.scaleY);
     this.middleShadow = this.scene.add
-      .image(
-        this.leftShadowCap.x + this.leftShadowCap.width,
-        this.y,
-        HEALTH_BAR_ASSET_KEYS.MIDDLE_SHADOW
-      )
+      .image(this.leftShadowCap.x + this.leftShadowCap.width, this.y, HEALTH_BAR_ASSET_KEYS.MIDDLE_SHADOW)
       .setOrigin(0, 0.5)
       .setScale(1, this.scaleY);
     this.middleShadow.displayWidth = this.fullWidth; // Stretch using a value
     this.rightShadowCap = this.scene.add
-      .image(
-        this.middleShadow.x + this.middleShadow.displayWidth,
-        this.y,
-        HEALTH_BAR_ASSET_KEYS.RIGHT_CAP_SHADOW
-      )
+      .image(this.middleShadow.x + this.middleShadow.displayWidth, this.y, HEALTH_BAR_ASSET_KEYS.RIGHT_CAP_SHADOW)
       .setOrigin(0, 0.5)
       .setScale(1, this.scaleY);
-    this.healthBarContainer.add([
-      this.leftShadowCap,
-      this.middleShadow,
-      this.rightShadowCap,
-    ]);
+    this.healthBarContainer.add([this.leftShadowCap, this.middleShadow, this.rightShadowCap]);
   }
 
-  public setMeterPercentageAnimated(
-    percent: number = 1,
-    options?: { duration?: number; callback?: () => void }
-  ): void {
+  public setMeterPercentageAnimated(percent: number = 1, options?: { duration?: number; callback?: () => void }): void {
     const width = this.fullWidth * percent;
     this.scene.tweens.add({
       targets: this.middle,

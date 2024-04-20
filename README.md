@@ -33,7 +33,6 @@ The TypeScript and ViteJS setup was based on the following repository: [phaser3-
 
 [Monster Tamer](https://github.com/devshareacademy/monster-tamer/releases/tag/assets)
 
-
 ## Tutorial Progress:
 
 https://www.youtube.com/watch?v=xeaSPQNsT9g&list=PLmcXe0-sfoSgq-pyXrFx0GZjHbvoVUW8t&index=30

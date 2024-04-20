@@ -5,9 +5,7 @@ import { KENNEY_FUTURE_NARROW_FONT_NAME } from "../../assets/fontKeys";
 const PLAYER_POSITION: Coordinate = { x: 256, y: 316 } as const;
 export class PlayerBattleMonster extends BattleMonster {
   private healthBarTextGameObject: Phaser.GameObjects.Text;
-  public constructor(
-    config: Omit<BattleMonsterConfig, "scaleHealthBarBackgroundImageByY">
-  ) {
+  public constructor(config: Omit<BattleMonsterConfig, "scaleHealthBarBackgroundImageByY">) {
     super({ ...config, scaleHealthBarBackgroundImageByY: 1 }, PLAYER_POSITION);
     this.phaserGameObject.setFlipX(true);
     this.phaserHealthBarGameContainer.setPosition(556, 318);
@@ -16,9 +14,7 @@ export class PlayerBattleMonster extends BattleMonster {
   }
 
   private setHealthBarText(): void {
-    this.healthBarTextGameObject.setText(
-      `${this.currentHealth}/${this.maxHealth}`
-    );
+    this.healthBarTextGameObject.setText(`${this.currentHealth}/${this.maxHealth}`);
   }
   public addHealthBarComponents(): void {
     this.healthBarTextGameObject = this.scene.add
@@ -69,19 +65,13 @@ export class PlayerBattleMonster extends BattleMonster {
     const endXPos = this.phaserHealthBarGameContainer.x;
 
     if (this.skipBattleAnimations) {
-      this.phaserHealthBarGameContainer.setPosition(
-        endXPos,
-        this.phaserHealthBarGameContainer.y
-      );
+      this.phaserHealthBarGameContainer.setPosition(endXPos, this.phaserHealthBarGameContainer.y);
       this.phaserHealthBarGameContainer.setAlpha(1);
       callback();
       return;
     }
 
-    this.phaserHealthBarGameContainer.setPosition(
-      startXPos,
-      this.phaserHealthBarGameContainer.y
-    );
+    this.phaserHealthBarGameContainer.setPosition(startXPos, this.phaserHealthBarGameContainer.y);
     this.phaserHealthBarGameContainer.setAlpha(1);
     this.scene.tweens.add({
       delay: 0,

@@ -4,10 +4,7 @@ export abstract class Attack {
   protected scene: Phaser.Scene;
   protected position: Coordinate;
   protected isAnimationPlaying: boolean;
-  protected attackGameObject:
-    | Phaser.GameObjects.Sprite
-    | Phaser.GameObjects.Container
-    | undefined;
+  protected attackGameObject: Phaser.GameObjects.Sprite | Phaser.GameObjects.Container | undefined;
 
   public constructor(scene: Phaser.Scene, position: Coordinate) {
     this.scene = scene;
@@ -16,10 +13,7 @@ export abstract class Attack {
     this.attackGameObject = undefined;
   }
 
-  public get gameObject():
-    | Phaser.GameObjects.Sprite
-    | Phaser.GameObjects.Container
-    | undefined {
+  public get gameObject(): Phaser.GameObjects.Sprite | Phaser.GameObjects.Container | undefined {
     return this.attackGameObject;
   }
 

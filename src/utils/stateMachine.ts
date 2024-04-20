@@ -33,9 +33,7 @@ export class StateMachine {
   public setState(name: string): void {
     const methodName = "setState";
     if (!this.states.has(name)) {
-      console.warn(
-        `[${StateMachine.name}-${this.id}:${methodName}] State ${name} does not exist`
-      );
+      console.warn(`[${StateMachine.name}-${this.id}:${methodName}] State ${name} does not exist`);
       return;
     }
 
@@ -49,11 +47,7 @@ export class StateMachine {
     }
 
     this.isChangingState = true;
-    console.log(
-      `[${StateMachine.name}-${this.id}:${methodName}] change from ${
-        this.currentState?.name ?? "None"
-      } to ${name}`
-    );
+    console.log(`[${StateMachine.name}-${this.id}:${methodName}] change from ${this.currentState?.name ?? "None"} to ${name}`);
     this.currentState = this.states.get(name);
 
     if (this.currentState?.onEnter) {
@@ -61,9 +55,7 @@ export class StateMachine {
     }
 
     this.isChangingState = false;
-    console.log(
-      `[${StateMachine.name}-${this.id}:${methodName}] ${this.currentState?.name} on enter invoked`
-    );
+    console.log(`[${StateMachine.name}-${this.id}:${methodName}] ${this.currentState?.name} on enter invoked`);
   }
 
   public addState(state: State): void {

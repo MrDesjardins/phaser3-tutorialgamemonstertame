@@ -19,11 +19,7 @@ export class AttackManager {
     this.skipBattleAnimation = skipBattleAnimation;
   }
 
-  public playAttackAnimation(
-    attack: ATTACK_KEYS,
-    target: ATTACK_TARGET,
-    callback?: () => void
-  ): void {
+  public playAttackAnimation(attack: ATTACK_KEYS, target: ATTACK_TARGET, callback?: () => void): void {
     if (this.skipBattleAnimation) {
       callback?.();
       return;

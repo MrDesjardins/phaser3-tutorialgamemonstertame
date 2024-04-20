@@ -5,11 +5,7 @@ import { exhaustiveCheck } from "../../../utils/guard";
 import { animateText } from "../../../utils/textUtils";
 import { BattleMonster } from "../../monsters/battleMonster";
 import { BATTLE_UI_TEXT_STYLE } from "./battleMenuConfig";
-import {
-  BATTLE_MENU_OPTIONS,
-  ATTACK_MOVE_OPTIONS,
-  ACTIVE_BATTLE_MENU,
-} from "./battleMenuOption";
+import { BATTLE_MENU_OPTIONS, ATTACK_MOVE_OPTIONS, ACTIVE_BATTLE_MENU } from "./battleMenuOption";
 
 const BATTLE_MENU_CURSOR_POSITIONS = {
   x: 42,
@@ -26,20 +22,12 @@ const PLAYER_INPUT_CURSOR_POSITIONS = {
 } as const;
 export class BattleMenu {
   private scene: Phaser.Scene;
-  private mainBattleMenuPhaserContainerGameObject:
-    | Phaser.GameObjects.Container
-    | undefined;
-  private moveSelectionSubBattleMenuPhaserContainerGameObject:
-    | Phaser.GameObjects.Container
-    | undefined;
+  private mainBattleMenuPhaserContainerGameObject: Phaser.GameObjects.Container | undefined;
+  private moveSelectionSubBattleMenuPhaserContainerGameObject: Phaser.GameObjects.Container | undefined;
   private battleTextGameObjectLine1: Phaser.GameObjects.Text | undefined;
   private battleTextGameObjectLine2: Phaser.GameObjects.Text | undefined;
-  private mainBattleMenuCursorPhaserGameObject:
-    | Phaser.GameObjects.Image
-    | undefined;
-  private attackBattleMenuCursorPhaserGameObject:
-    | Phaser.GameObjects.Image
-    | undefined;
+  private mainBattleMenuCursorPhaserGameObject: Phaser.GameObjects.Image | undefined;
+  private attackBattleMenuCursorPhaserGameObject: Phaser.GameObjects.Image | undefined;
   private selectedBattleMenuOption: keyof typeof BATTLE_MENU_OPTIONS;
   private selectedAttackMenuOption: keyof typeof ATTACK_MOVE_OPTIONS;
   private activeBattleMenu: keyof typeof ACTIVE_BATTLE_MENU;
@@ -48,9 +36,7 @@ export class BattleMenu {
   private waitingForPlayerInput: boolean;
   private selecteAttackIndex: number | undefined;
   private activePlayerMonster: BattleMonster;
-  private userInputCursorPhaserImageGameObject:
-    | Phaser.GameObjects.Image
-    | undefined;
+  private userInputCursorPhaserImageGameObject: Phaser.GameObjects.Image | undefined;
   private userInputCursorPhaserTween: Phaser.Tweens.Tween | undefined;
   private queuedMessagesSkipAnimation: boolean = false;
   private queuedMessageAnimationPlaying: boolean = false;
@@ -76,10 +62,7 @@ export class BattleMenu {
     this.battleTextGameObjectLine1?.setVisible(true);
     this.battleTextGameObjectLine2?.setVisible(true);
     this.selectedBattleMenuOption = BATTLE_MENU_OPTIONS.FIGHT;
-    this.mainBattleMenuCursorPhaserGameObject?.setPosition(
-      BATTLE_MENU_CURSOR_POSITIONS.x,
-      BATTLE_MENU_CURSOR_POSITIONS.y
-    );
+    this.mainBattleMenuCursorPhaserGameObject?.setPosition(BATTLE_MENU_CURSOR_POSITIONS.x, BATTLE_MENU_CURSOR_POSITIONS.y);
     this.selecteAttackIndex = undefined;
   }
 
@@ -106,9 +89,8 @@ export class BattleMenu {
 
   public playInputCursorAnimation(): void {
     this.userInputCursorPhaserImageGameObject?.setPosition(
-      (this.battleTextGameObjectLine1?.displayWidth ?? 0) +
-        this.userInputCursorPhaserImageGameObject.displayWidth * 2,
-      this.userInputCursorPhaserImageGameObject.y
+      (this.battleTextGameObjectLine1?.displayWidth ?? 0) + this.userInputCursorPhaserImageGameObject.displayWidth * 2,
+      this.userInputCursorPhaserImageGameObject.y,
     );
     this.userInputCursorPhaserImageGameObject?.setVisible(true);
     this.userInputCursorPhaserTween?.restart();
@@ -148,11 +130,7 @@ export class BattleMenu {
     this.moveSelectedBattleMenuCursor();
   }
 
-  public updateInfoPaneMessagesNoInputRequired(
-    message: string,
-    callback?: () => void,
-    skipAnimation: boolean = false
-  ): void {
+  public updateInfoPaneMessagesNoInputRequired(message: string, callback?: () => void, skipAnimation: boolean = false): void {
     if (this.battleTextGameObjectLine1) {
       this.battleTextGameObjectLine1.setText("").setVisible(true);
       if (skipAnimation) {
@@ -174,11 +152,7 @@ export class BattleMenu {
       }
     }
   }
-  public updateInfoPaneMessagesAndWaitForInput(
-    messages: string[],
-    callback?: () => void,
-    skipAnimation: boolean = false
-  ): void {
+  public updateInfoPaneMessagesAndWaitForInput(messages: string[], callback?: () => void, skipAnimation: boolean = false): void {
     this.queuedInfoPanelMessages = messages;
     this.queuedInfoPanelCallback = callback;
     this.queuedMessagesSkipAnimation = skipAnimation;
@@ -203,91 +177,42 @@ export class BattleMenu {
           this.battleTextGameObjectLine1?.setText(messageToDisplay);
           this.queuedMessageAnimationPlaying = false;
           this.waitingForPlayerInput = true;
-          this.playInputCursorAnimation(); 
+          this.playInputCursorAnimation();
           return;
         }
         this.queuedMessageAnimationPlaying = true;
-        animateText(
-          this.scene,
-          this.battleTextGameObjectLine1,
-          messageToDisplay,
-          {
-            delay: 50,
-            callback: () => {
-              this.playInputCursorAnimation();
-              this.waitingForPlayerInput = true;
-              this.queuedMessageAnimationPlaying = false;
-            },
-          }
-        );
+        animateText(this.scene, this.battleTextGameObjectLine1, messageToDisplay, {
+          delay: 50,
+          callback: () => {
+            this.playInputCursorAnimation();
+            this.waitingForPlayerInput = true;
+            this.queuedMessageAnimationPlaying = false;
+          },
+        });
       }
     }
   }
   private createMainBattleMenu(): void {
-    this.battleTextGameObjectLine1 = this.scene.add.text(
-      20,
-      468,
-      "What should",
-      BATTLE_UI_TEXT_STYLE
-    );
-    this.battleTextGameObjectLine2 = this.scene.add.text(
-      20,
-      512,
-      `${MONSTER_ASSET_KEYS.IGUANIGNITE} do next?`,
-      BATTLE_UI_TEXT_STYLE
-    );
+    this.battleTextGameObjectLine1 = this.scene.add.text(20, 468, "What should", BATTLE_UI_TEXT_STYLE);
+    this.battleTextGameObjectLine2 = this.scene.add.text(20, 512, `${MONSTER_ASSET_KEYS.IGUANIGNITE} do next?`, BATTLE_UI_TEXT_STYLE);
 
     this.mainBattleMenuCursorPhaserGameObject = this.scene.add
-      .image(
-        BATTLE_MENU_CURSOR_POSITIONS.x,
-        BATTLE_MENU_CURSOR_POSITIONS.y,
-        UI_ASSET_KEYS.CURSOR,
-        0
-      )
+      .image(BATTLE_MENU_CURSOR_POSITIONS.x, BATTLE_MENU_CURSOR_POSITIONS.y, UI_ASSET_KEYS.CURSOR, 0)
       .setOrigin(0.5, 0.5)
       .setScale(2.5);
-    this.mainBattleMenuPhaserContainerGameObject = this.scene.add.container(
-      520,
-      440,
-      [
-        this.createMainInfoSubPane(),
-        this.scene.add.text(
-          55,
-          22,
-          BATTLE_MENU_OPTIONS.FIGHT,
-          BATTLE_UI_TEXT_STYLE
-        ),
-        this.scene.add.text(
-          240,
-          22,
-          BATTLE_MENU_OPTIONS.SWITCH,
-          BATTLE_UI_TEXT_STYLE
-        ),
-        this.scene.add.text(
-          55,
-          70,
-          BATTLE_MENU_OPTIONS.ITEM,
-          BATTLE_UI_TEXT_STYLE
-        ),
-        this.scene.add.text(
-          240,
-          70,
-          BATTLE_MENU_OPTIONS.FLEE,
-          BATTLE_UI_TEXT_STYLE
-        ),
-        this.mainBattleMenuCursorPhaserGameObject,
-      ]
-    );
+    this.mainBattleMenuPhaserContainerGameObject = this.scene.add.container(520, 440, [
+      this.createMainInfoSubPane(),
+      this.scene.add.text(55, 22, BATTLE_MENU_OPTIONS.FIGHT, BATTLE_UI_TEXT_STYLE),
+      this.scene.add.text(240, 22, BATTLE_MENU_OPTIONS.SWITCH, BATTLE_UI_TEXT_STYLE),
+      this.scene.add.text(55, 70, BATTLE_MENU_OPTIONS.ITEM, BATTLE_UI_TEXT_STYLE),
+      this.scene.add.text(240, 70, BATTLE_MENU_OPTIONS.FLEE, BATTLE_UI_TEXT_STYLE),
+      this.mainBattleMenuCursorPhaserGameObject,
+    ]);
     this.hideMainBattleMenu();
   }
   private createMonsterAttackSubMenu(): void {
     this.attackBattleMenuCursorPhaserGameObject = this.scene.add
-      .image(
-        ATTACK_MENU_CURSOR_POSITIONS.x,
-        ATTACK_MENU_CURSOR_POSITIONS.y,
-        UI_ASSET_KEYS.CURSOR,
-        0
-      )
+      .image(ATTACK_MENU_CURSOR_POSITIONS.x, ATTACK_MENU_CURSOR_POSITIONS.y, UI_ASSET_KEYS.CURSOR, 0)
       .setOrigin(0.5)
       .setScale(2.5);
 
@@ -295,14 +220,13 @@ export class BattleMenu {
     for (let i = 0; i < 4; i++) {
       attackNames.push(this.activePlayerMonster.attacks[i]?.name || "-");
     }
-    this.moveSelectionSubBattleMenuPhaserContainerGameObject =
-      this.scene.add.container(0, 448, [
-        this.scene.add.text(55, 22, attackNames[0], BATTLE_UI_TEXT_STYLE),
-        this.scene.add.text(240, 22, attackNames[1], BATTLE_UI_TEXT_STYLE),
-        this.scene.add.text(55, 70, attackNames[2], BATTLE_UI_TEXT_STYLE),
-        this.scene.add.text(240, 70, attackNames[3], BATTLE_UI_TEXT_STYLE),
-        this.attackBattleMenuCursorPhaserGameObject,
-      ]);
+    this.moveSelectionSubBattleMenuPhaserContainerGameObject = this.scene.add.container(0, 448, [
+      this.scene.add.text(55, 22, attackNames[0], BATTLE_UI_TEXT_STYLE),
+      this.scene.add.text(240, 22, attackNames[1], BATTLE_UI_TEXT_STYLE),
+      this.scene.add.text(55, 70, attackNames[2], BATTLE_UI_TEXT_STYLE),
+      this.scene.add.text(240, 70, attackNames[3], BATTLE_UI_TEXT_STYLE),
+      this.attackBattleMenuCursorPhaserGameObject,
+    ]);
     this.hideMonsterAttackSubMenu();
   }
 
@@ -310,14 +234,7 @@ export class BattleMenu {
     const rectHeight = 132;
     const padding = 4;
     this.scene.add
-      .rectangle(
-        padding,
-        this.scene.scale.height - rectHeight - padding,
-        this.scene.scale.width - 2 * padding,
-        rectHeight,
-        0xede4f3,
-        1
-      )
+      .rectangle(padding, this.scene.scale.height - rectHeight - padding, this.scene.scale.width - 2 * padding, rectHeight, 0xede4f3, 1)
       .setOrigin(0)
       .setStrokeStyle(8, 0xe4434a);
   }
@@ -325,10 +242,7 @@ export class BattleMenu {
     const rectHeight = 132;
     const recWidth = 500;
 
-    return this.scene.add
-      .rectangle(0, 0, recWidth, rectHeight, 0xede4f3, 1)
-      .setOrigin(0)
-      .setStrokeStyle(8, 0x905ac2);
+    return this.scene.add.rectangle(0, 0, recWidth, rectHeight, 0xede4f3, 1).setOrigin(0).setStrokeStyle(8, 0x905ac2);
   }
   private updateSelectedBattleMenuOptionFromInput(direction: DIRECTION): void {
     switch (this.selectedBattleMenuOption) {
@@ -387,24 +301,15 @@ export class BattleMenu {
     }
     switch (this.selectedBattleMenuOption) {
       case BATTLE_MENU_OPTIONS.FIGHT: {
-        this.mainBattleMenuCursorPhaserGameObject?.setPosition(
-          BATTLE_MENU_CURSOR_POSITIONS.x,
-          BATTLE_MENU_CURSOR_POSITIONS.y
-        );
+        this.mainBattleMenuCursorPhaserGameObject?.setPosition(BATTLE_MENU_CURSOR_POSITIONS.x, BATTLE_MENU_CURSOR_POSITIONS.y);
         break;
       }
       case BATTLE_MENU_OPTIONS.SWITCH: {
-        this.mainBattleMenuCursorPhaserGameObject?.setPosition(
-          228,
-          BATTLE_MENU_CURSOR_POSITIONS.y
-        );
+        this.mainBattleMenuCursorPhaserGameObject?.setPosition(228, BATTLE_MENU_CURSOR_POSITIONS.y);
         break;
       }
       case BATTLE_MENU_OPTIONS.ITEM: {
-        this.mainBattleMenuCursorPhaserGameObject?.setPosition(
-          BATTLE_MENU_CURSOR_POSITIONS.x,
-          86
-        );
+        this.mainBattleMenuCursorPhaserGameObject?.setPosition(BATTLE_MENU_CURSOR_POSITIONS.x, 86);
         break;
       }
       case BATTLE_MENU_OPTIONS.FLEE: {
@@ -472,24 +377,15 @@ export class BattleMenu {
     }
     switch (this.selectedAttackMenuOption) {
       case ATTACK_MOVE_OPTIONS.MOVE1: {
-        this.attackBattleMenuCursorPhaserGameObject?.setPosition(
-          ATTACK_MENU_CURSOR_POSITIONS.x,
-          ATTACK_MENU_CURSOR_POSITIONS.y
-        );
+        this.attackBattleMenuCursorPhaserGameObject?.setPosition(ATTACK_MENU_CURSOR_POSITIONS.x, ATTACK_MENU_CURSOR_POSITIONS.y);
         break;
       }
       case ATTACK_MOVE_OPTIONS.MOVE2: {
-        this.attackBattleMenuCursorPhaserGameObject?.setPosition(
-          228,
-          ATTACK_MENU_CURSOR_POSITIONS.y
-        );
+        this.attackBattleMenuCursorPhaserGameObject?.setPosition(228, ATTACK_MENU_CURSOR_POSITIONS.y);
         break;
       }
       case ATTACK_MOVE_OPTIONS.MOVE3: {
-        this.attackBattleMenuCursorPhaserGameObject?.setPosition(
-          ATTACK_MENU_CURSOR_POSITIONS.x,
-          86
-        );
+        this.attackBattleMenuCursorPhaserGameObject?.setPosition(ATTACK_MENU_CURSOR_POSITIONS.x, 86);
         break;
       }
       case ATTACK_MOVE_OPTIONS.MOVE4: {
@@ -522,7 +418,7 @@ export class BattleMenu {
           (): void => {
             this.switchToMainBattleMenu();
           },
-          SKIP_BATTLE_ANIMATIONS
+          SKIP_BATTLE_ANIMATIONS,
         );
         break;
       }
@@ -533,7 +429,7 @@ export class BattleMenu {
           (): void => {
             this.switchToMainBattleMenu();
           },
-          SKIP_BATTLE_ANIMATIONS
+          SKIP_BATTLE_ANIMATIONS,
         );
         break;
       }
@@ -544,7 +440,7 @@ export class BattleMenu {
           (): void => {
             this.switchToMainBattleMenu();
           },
-          SKIP_BATTLE_ANIMATIONS
+          SKIP_BATTLE_ANIMATIONS,
         );
         break;
       }

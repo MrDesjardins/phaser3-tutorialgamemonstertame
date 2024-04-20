@@ -3,9 +3,7 @@ import { BattleMonsterConfig, Coordinate } from "../../types/typeDef";
 
 const ENEMY_POSITION: Coordinate = { x: 768, y: 144 } as const;
 export class EnemyBattleMonster extends BattleMonster {
-  public constructor(
-    config: Omit<BattleMonsterConfig, "scaleHealthBarBackgroundImageByY">
-  ) {
+  public constructor(config: Omit<BattleMonsterConfig, "scaleHealthBarBackgroundImageByY">) {
     super({ ...config, scaleHealthBarBackgroundImageByY: 0.8 }, ENEMY_POSITION);
   }
 
@@ -39,19 +37,13 @@ export class EnemyBattleMonster extends BattleMonster {
     const endXPos = 0;
 
     if (this.skipBattleAnimations) {
-      this.phaserHealthBarGameContainer.setPosition(
-        endXPos,
-        this.phaserHealthBarGameContainer.y
-      );
+      this.phaserHealthBarGameContainer.setPosition(endXPos, this.phaserHealthBarGameContainer.y);
       this.phaserHealthBarGameContainer.setAlpha(1);
       callback();
       return;
     }
 
-    this.phaserHealthBarGameContainer.setPosition(
-      startXPos,
-      this.phaserHealthBarGameContainer.y
-    );
+    this.phaserHealthBarGameContainer.setPosition(startXPos, this.phaserHealthBarGameContainer.y);
     this.phaserHealthBarGameContainer.setAlpha(1);
     this.scene.tweens.add({
       delay: 0,

@@ -158,12 +158,12 @@ export class BattleScene extends Phaser.Scene {
                     this.enemyAttack();
                   });
                 });
-              }
+              },
             );
           }
         });
       },
-      SKIP_BATTLE_ANIMATIONS
+      SKIP_BATTLE_ANIMATIONS,
     );
   }
   private enemyAttack(): void {
@@ -186,7 +186,7 @@ export class BattleScene extends Phaser.Scene {
           }
         });
       },
-      SKIP_BATTLE_ANIMATIONS
+      SKIP_BATTLE_ANIMATIONS,
     );
   }
 
@@ -198,7 +198,7 @@ export class BattleScene extends Phaser.Scene {
           () => {
             this.battleStateMachine.setState(BATTLE_STATES.FINISHED);
           },
-          SKIP_BATTLE_ANIMATIONS
+          SKIP_BATTLE_ANIMATIONS,
         );
       });
       return;
@@ -211,7 +211,7 @@ export class BattleScene extends Phaser.Scene {
           () => {
             this.battleStateMachine.setState(BATTLE_STATES.FINISHED);
           },
-          SKIP_BATTLE_ANIMATIONS
+          SKIP_BATTLE_ANIMATIONS,
         );
       });
       return;
@@ -246,7 +246,7 @@ export class BattleScene extends Phaser.Scene {
             () => {
               this.battleStateMachine.setState(BATTLE_STATES.BRING_OUT_MONSTER);
             },
-            SKIP_BATTLE_ANIMATIONS
+            SKIP_BATTLE_ANIMATIONS,
           );
         });
       },
@@ -263,7 +263,7 @@ export class BattleScene extends Phaser.Scene {
                 this.battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT);
               });
             },
-            SKIP_BATTLE_ANIMATIONS
+            SKIP_BATTLE_ANIMATIONS,
           );
         });
       },
@@ -307,7 +307,7 @@ export class BattleScene extends Phaser.Scene {
           () => {
             this.battleStateMachine.setState(BATTLE_STATES.FINISHED);
           },
-          SKIP_BATTLE_ANIMATIONS
+          SKIP_BATTLE_ANIMATIONS,
         );
       },
     });

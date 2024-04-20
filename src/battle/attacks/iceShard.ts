@@ -9,13 +9,10 @@ export class IceShard extends Attack {
 
     this.scene.anims.create({
       key: ATTACK_ASSET_KEYS.ICE_SHARD,
-      frames: this.scene.anims.generateFrameNumbers(
-        ATTACK_ASSET_KEYS.ICE_SHARD,
-        {
-          start: 0,
-          end: 5,
-        }
-      ),
+      frames: this.scene.anims.generateFrameNumbers(ATTACK_ASSET_KEYS.ICE_SHARD, {
+        start: 0,
+        end: 5,
+      }),
       frameRate: 8,
       repeat: 0,
       delay: 0,
@@ -23,13 +20,10 @@ export class IceShard extends Attack {
 
     this.scene.anims.create({
       key: ATTACK_ASSET_KEYS.ICE_SHARD_START,
-      frames: this.scene.anims.generateFrameNumbers(
-        ATTACK_ASSET_KEYS.ICE_SHARD_START,
-        {
-          start: 0,
-          end: 5,
-        }
-      ),
+      frames: this.scene.anims.generateFrameNumbers(ATTACK_ASSET_KEYS.ICE_SHARD_START, {
+        start: 0,
+        end: 5,
+      }),
       frameRate: 8,
       repeat: 0,
       delay: 0,
@@ -59,24 +53,16 @@ export class IceShard extends Attack {
     this.isAnimationPlaying = true;
     this.attackGameObject.setAlpha(1);
     this.attackGameObject.play(ATTACK_ASSET_KEYS.ICE_SHARD_START);
-    this.attackGameObject.once(
-      Phaser.Animations.Events.ANIMATION_COMPLETE_KEY +
-        ATTACK_ASSET_KEYS.ICE_SHARD_START,
-      () => {
-        this.attackGameObject.play(ATTACK_ASSET_KEYS.ICE_SHARD);
-      }
-    );
+    this.attackGameObject.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_ASSET_KEYS.ICE_SHARD_START, () => {
+      this.attackGameObject.play(ATTACK_ASSET_KEYS.ICE_SHARD);
+    });
 
-    this.attackGameObject.once(
-      Phaser.Animations.Events.ANIMATION_COMPLETE_KEY +
-        ATTACK_ASSET_KEYS.ICE_SHARD,
-      () => {
-        this.attackGameObject.setAlpha(0).setFrame(0);
-        this.isAnimationPlaying = false;
-        if (callback) {
-          callback();
-        }
+    this.attackGameObject.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_ASSET_KEYS.ICE_SHARD, () => {
+      this.attackGameObject.setAlpha(0).setFrame(0);
+      this.isAnimationPlaying = false;
+      if (callback) {
+        callback();
       }
-    );
+    });
   }
 }

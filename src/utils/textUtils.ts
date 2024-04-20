@@ -2,12 +2,7 @@ export interface AnimationTextConfig {
   delay?: number;
   callback?: () => void;
 }
-export function animateText(
-  scene: Phaser.Scene,
-  target: Phaser.GameObjects.Text,
-  text: string,
-  configuration: AnimationTextConfig
-): void {
+export function animateText(scene: Phaser.Scene, target: Phaser.GameObjects.Text, text: string, configuration: AnimationTextConfig): void {
   const length = text.length;
   let i = 0;
   const timer = scene.time.addEvent({
