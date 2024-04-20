@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "prettier": "prettier --write src/**/*.ts"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
     "@types/node": "^20.11.30",
     "@types/webfontloader": "^1.6.38",
     "phaser": "^3.80.1",
+    "prettier": "^3.2.5",
     "typescript": "^5.4.3",
     "vite": "^5.2.4"
   },
