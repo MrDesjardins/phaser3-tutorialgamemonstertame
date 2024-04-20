@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { SCENE_KEYS } from "./sceneKeys";
 import {
+  ATTACK_ASSET_KEYS,
   BATTLE_ASSET_KEYS,
   BATTLE_BACKGROUND_ASSET_KEYS,
   DATA_ASSET_KEYS,
@@ -24,6 +25,7 @@ export class PreloadScene extends Phaser.Scene {
   public preload(): void {
     const monsterTamerAssetPath = "assets/images/monster-tamer";
     const kenneysAssetPath = "assets/images/kenneys-assets";
+    const pimenAssetPatch = "assets/images/pimen";
 
     // Battle
     this.load.image(
@@ -83,6 +85,32 @@ export class PreloadScene extends Phaser.Scene {
     // Custom Fonts
     this.load.addFile(
       new WebFontFileLoader(this.load, [KENNEY_FUTURE_NARROW_FONT_NAME])
+    );
+
+    // Load Attack Assets
+    this.load.spritesheet(
+      ATTACK_ASSET_KEYS.ICE_SHARD,
+      `${pimenAssetPatch}/ice-attack/active.png`,
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      ATTACK_ASSET_KEYS.ICE_SHARD_START,
+      `${pimenAssetPatch}/ice-attack/start.png`,
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      ATTACK_ASSET_KEYS.SLASH,
+      `${pimenAssetPatch}/slash.png`,
+      {
+        frameWidth: 48,
+        frameHeight: 48,
+      }
     );
   }
 

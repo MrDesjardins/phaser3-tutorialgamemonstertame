@@ -8,6 +8,7 @@ import { DIRECTION } from "../common/direction";
 import { SCENE_KEYS } from "./sceneKeys";
 import { StateMachine } from "../utils/stateMachine";
 import { SKIP_BATTLE_ANIMATIONS } from "../config";
+import { IceShard } from "../battle/attacks/iceShard";
 
 const BATTLE_STATES = {
   INTRO: "INTRO",
@@ -84,6 +85,8 @@ export class BattleScene extends Phaser.Scene {
     this.createBattleStateMachine();
 
     this.cursorKeys = this.input.keyboard?.createCursorKeys();
+    const atk = new IceShard(this, { x: 745, y: 140 });
+    atk.playAttackAnimation();
   }
 
   public update(time: number, delta: number): void {

@@ -27,3 +27,9 @@ export const UI_ASSET_KEYS = {
 export const DATA_ASSET_KEYS = {
   ATTACKS: "ATTACKS",
 } as const;
+
+export const ATTACK_ASSET_KEYS = {
+  ICE_SHARD: "ICE_SHARD",
+  ICE_SHARD_START: "ICE_SHARD_START",
+  SLASH: "SLASH",
+} as const;
