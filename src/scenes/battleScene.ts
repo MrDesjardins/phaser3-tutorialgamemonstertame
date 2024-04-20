@@ -9,6 +9,8 @@ import { SCENE_KEYS } from "./sceneKeys";
 import { StateMachine } from "../utils/stateMachine";
 import { SKIP_BATTLE_ANIMATIONS } from "../config";
 import { IceShard } from "../battle/attacks/iceShard";
+import { Slash } from "../battle/attacks/slash";
+import { ATTACK_TARGET, AttackManager } from "../battle/attacks/attackManager";
 
 const BATTLE_STATES = {
   INTRO: "INTRO",
@@ -24,12 +26,12 @@ const BATTLE_STATES = {
 
 export class BattleScene extends Phaser.Scene {
   private battleMenu: BattleMenu | undefined = undefined;
-  private cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys | undefined =
-    undefined;
+  private cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys | undefined = undefined;
   private activeEnemyMonster: EnemyBattleMonster | undefined = undefined;
   private activePlayerMonster: PlayerBattleMonster | undefined = undefined;
   private activePlayerAttackIndex: number = -1;
   private battleStateMachine: StateMachine;
+  private attackManager: AttackManager | undefined = undefined;
   public constructor() {
     // Set a unique name for the scene.
     super({
@@ -83,34 +85,25 @@ export class BattleScene extends Phaser.Scene {
     // Panels
     this.battleMenu = new BattleMenu(this, this.activePlayerMonster);
     this.createBattleStateMachine();
-
+    this.attackManager = new AttackManager(this, SKIP_BATTLE_ANIMATIONS);
     this.cursorKeys = this.input.keyboard?.createCursorKeys();
-    const atk = new IceShard(this, { x: 745, y: 140 });
-    atk.playAttackAnimation();
   }
 
   public update(time: number, delta: number): void {
     this.battleStateMachine.update();
     if (this.cursorKeys) {
-      const wasSpaceKeyJustPressed = Phaser.Input.Keyboard.JustDown(
-        this.cursorKeys.space
-      );
+      const wasSpaceKeyJustPressed = Phaser.Input.Keyboard.JustDown(this.cursorKeys.space);
       if (
         wasSpaceKeyJustPressed &&
-        (this.battleStateMachine.currentStateName ===
-          BATTLE_STATES.PRE_BATTLE_INFO ||
-          this.battleStateMachine.currentStateName ===
-            BATTLE_STATES.POST_ATTACK_CHECK ||
-          this.battleStateMachine.currentStateName ===
-            BATTLE_STATES.FLEE_ATTEMPT)
+        (this.battleStateMachine.currentStateName === BATTLE_STATES.PRE_BATTLE_INFO ||
+          this.battleStateMachine.currentStateName === BATTLE_STATES.POST_ATTACK_CHECK ||
+          this.battleStateMachine.currentStateName === BATTLE_STATES.FLEE_ATTEMPT)
       ) {
         this.battleMenu?.handlePlayerInput("OK");
         return;
       }
 
-      if (
-        this.battleStateMachine.currentStateName !== BATTLE_STATES.PLAYER_INPUT
-      ) {
+      if (this.battleStateMachine.currentStateName !== BATTLE_STATES.PLAYER_INPUT) {
         return;
       }
       if (wasSpaceKeyJustPressed) {
@@ -119,24 +112,17 @@ export class BattleScene extends Phaser.Scene {
           return;
         } else {
           this.activePlayerAttackIndex = this.battleMenu?.selectedAttack;
-          if (
-            this.activePlayerMonster?.attacks[this.activePlayerAttackIndex] ===
-            undefined
-          ) {
+          if (this.activePlayerMonster?.attacks[this.activePlayerAttackIndex] === undefined) {
             // Invalid
             return;
           }
-          console.log(
-            `Player selected the following move ${this.battleMenu?.selectedAttack}`
-          );
+          console.log(`Player selected the following move ${this.battleMenu?.selectedAttack}`);
           this.battleMenu.hideMonsterAttackSubMenu();
           this.battleStateMachine.setState(BATTLE_STATES.ENEMY_INPUT);
         }
       }
 
-      const wasShiftKeyJustPressed = Phaser.Input.Keyboard.JustDown(
-        this.cursorKeys.shift
-      );
+      const wasShiftKeyJustPressed = Phaser.Input.Keyboard.JustDown(this.cursorKeys.shift);
       if (wasShiftKeyJustPressed) {
         this.battleMenu?.handlePlayerInput("CANCEL");
         return;
@@ -159,19 +145,22 @@ export class BattleScene extends Phaser.Scene {
 
   private playerAttack(): void {
     this.battleMenu?.updateInfoPaneMessagesNoInputRequired(
-      `${this.activePlayerMonster?.name} used ${
-        this.activePlayerMonster?.attacks[this.activePlayerAttackIndex].name
-      }!`,
+      `${this.activePlayerMonster?.name} used ${this.activePlayerMonster?.attacks[this.activePlayerAttackIndex].name}!`,
       () => {
         this.time.delayedCall(500, () => {
-          this.activeEnemyMonster?.playTakeDamageAnimation(() => {
-            this.activeEnemyMonster?.takeDamage(
-              this.activePlayerMonster?.baseAttack ?? 0,
+          if (this.activePlayerMonster) {
+            this.attackManager?.playAttackAnimation(
+              this.activePlayerMonster.attacks[this.activePlayerAttackIndex].animationName,
+              ATTACK_TARGET.ENEMY,
               () => {
-                this.enemyAttack();
+                this.activeEnemyMonster?.playTakeDamageAnimation(() => {
+                  this.activeEnemyMonster?.takeDamage(this.activePlayerMonster?.baseAttack ?? 0, () => {
+                    this.enemyAttack();
+                  });
+                });
               }
             );
-          });
+          }
         });
       },
       SKIP_BATTLE_ANIMATIONS
@@ -186,16 +175,15 @@ export class BattleScene extends Phaser.Scene {
       `for ${this.activeEnemyMonster?.name} used ${this.activeEnemyMonster?.attacks[0].name}!`,
       () => {
         this.time.delayedCall(500, () => {
-          this.activePlayerMonster?.playTakeDamageAnimation(() => {
-            this.activePlayerMonster?.takeDamage(
-              this.activeEnemyMonster?.baseAttack ?? 0,
-              () => {
-                this.battleStateMachine.setState(
-                  BATTLE_STATES.POST_ATTACK_CHECK
-                );
-              }
-            );
-          });
+          if (this.activeEnemyMonster) {
+            this.attackManager?.playAttackAnimation(this.activeEnemyMonster.attacks[0].animationName, ATTACK_TARGET.PLAYER, () => {
+              this.activePlayerMonster?.playTakeDamageAnimation(() => {
+                this.activePlayerMonster?.takeDamage(this.activeEnemyMonster?.baseAttack ?? 0, () => {
+                  this.battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_CHECK);
+                });
+              });
+            });
+          }
         });
       },
       SKIP_BATTLE_ANIMATIONS
@@ -206,10 +194,7 @@ export class BattleScene extends Phaser.Scene {
     if (this.activeEnemyMonster?.isFainted) {
       this.activeEnemyMonster?.playDeathAnimation(() => {
         this.battleMenu?.updateInfoPaneMessagesAndWaitForInput(
-          [
-            `Wild ${this.activeEnemyMonster?.name} fainted!`,
-            `You have gained some experience`,
-          ],
+          [`Wild ${this.activeEnemyMonster?.name} fainted!`, `You have gained some experience`],
           () => {
             this.battleStateMachine.setState(BATTLE_STATES.FINISHED);
           },
@@ -222,10 +207,7 @@ export class BattleScene extends Phaser.Scene {
     if (this.activePlayerMonster?.isFainted) {
       this.activePlayerMonster?.playDeathAnimation(() => {
         this.battleMenu?.updateInfoPaneMessagesAndWaitForInput(
-          [
-            `${this.activePlayerMonster?.name} fainted!`,
-            `You have no more monsters, escaping to safety...`,
-          ],
+          [`${this.activePlayerMonster?.name} fainted!`, `You have no more monsters, escaping to safety...`],
           () => {
             this.battleStateMachine.setState(BATTLE_STATES.FINISHED);
           },
@@ -239,12 +221,9 @@ export class BattleScene extends Phaser.Scene {
 
   private transitionToNextScene(): void {
     this.cameras.main.fadeOut(600, 0, 0, 0);
-    this.cameras.main.once(
-      Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
-      () => {
-        this.scene.start(SCENE_KEYS.BATTLE_SCENE);
-      }
-    );
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+      this.scene.start(SCENE_KEYS.BATTLE_SCENE);
+    });
   }
 
   private createBattleStateMachine(): void {
@@ -261,14 +240,9 @@ export class BattleScene extends Phaser.Scene {
       name: BATTLE_STATES.PRE_BATTLE_INFO,
       onEnter: () => {
         this.activeEnemyMonster?.playMonsterAppearAnimation((): void => {
-          this.activeEnemyMonster?.playMonsterHealthbarAppearAnimation(
-            (): void => {}
-          );
+          this.activeEnemyMonster?.playMonsterHealthbarAppearAnimation((): void => {});
           this.battleMenu?.updateInfoPaneMessagesAndWaitForInput(
-            [
-              `A wild ${this.activeEnemyMonster?.name} appeared!`,
-              `What will you do?`,
-            ],
+            [`A wild ${this.activeEnemyMonster?.name} appeared!`, `What will you do?`],
             () => {
               this.battleStateMachine.setState(BATTLE_STATES.BRING_OUT_MONSTER);
             },
@@ -281,9 +255,7 @@ export class BattleScene extends Phaser.Scene {
       name: BATTLE_STATES.BRING_OUT_MONSTER,
       onEnter: () => {
         this.activePlayerMonster?.playMonsterAppearAnimation((): void => {
-          this.activePlayerMonster?.playMonsterHealthbarAppearAnimation(
-            () => {}
-          );
+          this.activePlayerMonster?.playMonsterHealthbarAppearAnimation(() => {});
           this.battleMenu?.updateInfoPaneMessagesNoInputRequired(
             `Go! ${this.activePlayerMonster?.name}!`,
             () => {

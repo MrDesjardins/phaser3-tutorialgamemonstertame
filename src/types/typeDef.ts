@@ -1,3 +1,5 @@
+import { ATTACK_KEYS } from "../battle/attacks/attackKeys";
+
 export interface Monster {
   name: string;
   assetKey: string;
@@ -23,5 +25,5 @@ export interface Coordinate {
 export interface Attack {
   id: number;
   name: string;
-  animationName: String;
+  animationName: ATTACK_KEYS;
 }
