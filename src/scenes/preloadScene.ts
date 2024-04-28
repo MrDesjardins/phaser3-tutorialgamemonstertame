@@ -4,10 +4,12 @@ import {
   ATTACK_ASSET_KEYS,
   BATTLE_ASSET_KEYS,
   BATTLE_BACKGROUND_ASSET_KEYS,
+  CHARACTER_ASSET_KEYS,
   DATA_ASSET_KEYS,
   HEALTH_BAR_ASSET_KEYS,
   MONSTER_ASSET_KEYS,
   UI_ASSET_KEYS,
+  WORLD_ASSET_KEYS,
 } from "../assets/assetKeys";
 import { KENNEY_FUTURE_NARROW_FONT_NAME } from "../assets/fontKeys";
 import { WebFontFileLoader } from "../assets/webFontFileLoader";
@@ -26,6 +28,8 @@ export class PreloadScene extends Phaser.Scene {
     const monsterTamerAssetPath = "assets/images/monster-tamer";
     const kenneysAssetPath = "assets/images/kenneys-assets";
     const pimenAssetPatch = "assets/images/pimen";
+    const axulartAssetPath = "assets/images/axulart";
+    const parabellumtAssetPath = "assets/images/parabellum";
 
     // Battle
     this.load.image(BATTLE_BACKGROUND_ASSET_KEYS.FOREST, `${monsterTamerAssetPath}/battle-backgrounds/forest-background.png`);
@@ -65,10 +69,23 @@ export class PreloadScene extends Phaser.Scene {
       frameWidth: 48,
       frameHeight: 48,
     });
+
+    // Load Worlds Assets
+    this.load.image(WORLD_ASSET_KEYS.WORLD_BACKGROUND, `${monsterTamerAssetPath}/map/level_background.png`);
+
+    // Load Character Assets
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.PLAYER, `${axulartAssetPath}/character/custom.png`, {
+      frameWidth: 64,
+      frameHeight: 88,
+    });
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC, `${axulartAssetPath}/character.png`, {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
   }
 
   public create(): void {
-    this.scene.start(SCENE_KEYS.BATTLE_SCENE);
+    this.scene.start(SCENE_KEYS.WORLD_SCENE);
   }
 
   public update(time: number, delta: number): void {}

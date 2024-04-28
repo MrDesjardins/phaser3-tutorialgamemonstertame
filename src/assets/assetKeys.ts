@@ -33,3 +33,12 @@ export const ATTACK_ASSET_KEYS = {
   ICE_SHARD_START: "ICE_SHARD_START",
   SLASH: "SLASH",
 } as const;
+
+export const WORLD_ASSET_KEYS = {
+  WORLD_BACKGROUND: "WORLD_BACKGROUND",
+} as const;
+
+export const CHARACTER_ASSET_KEYS = {
+  PLAYER: "PLAYER",
+  NPC: "NPC",
+} as const;

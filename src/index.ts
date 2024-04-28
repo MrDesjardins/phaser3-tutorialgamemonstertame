@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import { PreloadScene } from "./scenes/preloadScene";
 import { SCENE_KEYS } from "./scenes/sceneKeys";
 import { BattleScene } from "./scenes/battleScene";
+import { WorldScene } from "./scenes/worldScene";
 
 export const configuration: Phaser.Types.Core.GameConfig = {
   type: Phaser.CANVAS,
@@ -19,6 +20,7 @@ export const configuration: Phaser.Types.Core.GameConfig = {
 const game = new Phaser.Game(configuration);
 
 game.scene.add(SCENE_KEYS.PRELOAD_SCENE, new PreloadScene());
+game.scene.add(SCENE_KEYS.WORLD_SCENE, new WorldScene());
 game.scene.add(SCENE_KEYS.BATTLE_SCENE, new BattleScene());
 
 game.scene.start(SCENE_KEYS.PRELOAD_SCENE);
