@@ -11,6 +11,7 @@ import { SKIP_BATTLE_ANIMATIONS } from "../config";
 import { IceShard } from "../battle/attacks/iceShard";
 import { Slash } from "../battle/attacks/slash";
 import { ATTACK_TARGET, AttackManager } from "../battle/attacks/attackManager";
+import { createSceneTransition } from "../utils/sceneTransition";
 
 const BATTLE_STATES = {
   INTRO: "INTRO",
@@ -231,8 +232,11 @@ export class BattleScene extends Phaser.Scene {
     this.battleStateMachine.addState({
       name: BATTLE_STATES.INTRO,
       onEnter: () => {
-        this.time.delayedCall(1200, () => {
-          this.battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO);
+        createSceneTransition(this, {
+          skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
+          callback: () => {
+            this.battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO);
+          },
         });
       },
     });
