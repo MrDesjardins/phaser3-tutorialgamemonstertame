@@ -50,6 +50,9 @@ export abstract class Character {
   get Direction() {
     return this.direction;
   }
+  get Sprite(): Phaser.GameObjects.Sprite {
+    return this.phaserGameObject;
+  }
 
   public moveCharacter(direction: DIRECTION): void {
     if (this.isMoving) {
