@@ -26,6 +26,7 @@ export const UI_ASSET_KEYS = {
 
 export const DATA_ASSET_KEYS = {
   ATTACKS: "ATTACKS",
+  ANIMATIONS: "ANIMATIONS",
 } as const;
 
 export const ATTACK_ASSET_KEYS = {
