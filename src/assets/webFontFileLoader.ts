@@ -9,7 +9,7 @@ export class WebFontFileLoader extends Phaser.Loader.File {
     this.fontNames = fontNames;
   }
 
-  public load(): void {
+  public override load(): void {
     WebFont.load({
       custom: {
         families: this.fontNames,

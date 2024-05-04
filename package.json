@@ -5,10 +5,11 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently --kill-others \"npm run tsc\" \"vite\"",
     "build": "vite build",
     "serve": "vite preview",
-    "prettier": "prettier --write src/**/*.ts"
+    "prettier": "prettier --write src/**/*.ts",
+    "tsc": "tsc --noEmit -w --pretty"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
     "@rollup/plugin-replace": "^5.0.5",
     "@types/node": "^20.11.30",
     "@types/webfontloader": "^1.6.38",
+    "concurrently": "^8.2.2",
     "phaser": "^3.80.1",
     "prettier": "^3.2.5",
     "typescript": "^5.4.3",

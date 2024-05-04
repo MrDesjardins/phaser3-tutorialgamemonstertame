@@ -50,5 +50,37 @@
     "delay": 0,
     "yoyo": true,
     "assetKey": "PLAYER"
+  },
+  {
+    "key": "ICE_SHARD_START",
+    "frameRate": 8,
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": false,
+    "assetKey": "ICE_SHARD_START"
+  },
+  {
+    "key": "ICE_SHARDT",
+    "frameRate": 8,
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": false,
+    "assetKey": "ICE_SHARD"
+  },
+  {
+    "key": "ICE_SHARD_START",
+    "frameRate": 8,
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": false,
+    "assetKey": "ICE_SHARD_START"
+  },
+  {
+    "key": "SLASH",
+    "frameRate": 4,
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": false,
+    "assetKey": "SLASH"
   }
 ]

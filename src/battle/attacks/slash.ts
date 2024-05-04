@@ -3,20 +3,12 @@ import { Coordinate } from "../../types/typeDef";
 import { Attack } from "./attack";
 
 export class Slash extends Attack {
-  protected attackGameObject: Phaser.GameObjects.Container;
+  protected override attackGameObject: Phaser.GameObjects.Container;
   protected attackGameObject1: Phaser.GameObjects.Sprite;
   protected attackGameObject2: Phaser.GameObjects.Sprite;
   protected attackGameObject3: Phaser.GameObjects.Sprite;
   public constructor(scene: Phaser.Scene, position: Coordinate) {
     super(scene, position);
-
-    this.scene.anims.create({
-      key: ATTACK_ASSET_KEYS.SLASH,
-      frames: this.scene.anims.generateFrameNumbers(ATTACK_ASSET_KEYS.SLASH),
-      frameRate: 4,
-      repeat: 0,
-      delay: 0,
-    });
 
     this.attackGameObject1 = this.scene.add.sprite(0, 0, ATTACK_ASSET_KEYS.SLASH, 0).setOrigin(0.5).setScale(4);
 

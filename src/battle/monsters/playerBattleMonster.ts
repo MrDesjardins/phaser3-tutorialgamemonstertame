@@ -28,12 +28,12 @@ export class PlayerBattleMonster extends BattleMonster {
     this.phaserHealthBarGameContainer.add(this.healthBarTextGameObject);
   }
 
-  public takeDamage(damage: number, callback?: () => void): void {
+  public override takeDamage(damage: number, callback?: () => void): void {
     super.takeDamage(damage, callback);
     this.setHealthBarText();
   }
 
-  public playMonsterAppearAnimation(callback: () => void): void {
+  public override playMonsterAppearAnimation(callback: () => void): void {
     const startXPos = -30;
     const endXPos = PLAYER_POSITION.x;
 
@@ -60,7 +60,7 @@ export class PlayerBattleMonster extends BattleMonster {
     });
   }
 
-  public playMonsterHealthbarAppearAnimation(callback: () => void): void {
+  public override playMonsterHealthbarAppearAnimation(callback: () => void): void {
     const startXPos = 800;
     const endXPos = this.phaserHealthBarGameContainer.x;
 
@@ -87,7 +87,7 @@ export class PlayerBattleMonster extends BattleMonster {
     });
   }
 
-  public playDeathAnimation(callback: () => void): void {
+  public override playDeathAnimation(callback: () => void): void {
     const startYPos = this.phaserGameObject.y;
     const endYPos = startYPos + 400;
 
