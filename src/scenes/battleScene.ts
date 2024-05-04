@@ -91,7 +91,7 @@ export class BattleScene extends Phaser.Scene {
     this.controls = new Controls(this);
   }
 
-  public update(time: number, delta: number): void {
+  public override update(time: number, delta: number): void {
     this.battleStateMachine.update();
     if (this.controls) {
       const wasSpaceKeyJustPressed = this.controls.wasSpaceJustPressed();

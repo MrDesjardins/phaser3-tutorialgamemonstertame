@@ -6,7 +6,12 @@ import { Character, CharacterConfig } from "./character";
 export interface PlayerConfig extends Omit<CharacterConfig, "assetKey" | "assetFrame"> {}
 export class Player extends Character {
   public constructor(config: PlayerConfig) {
-    super({ ...config, assetKey: CHARACTER_ASSET_KEYS.PLAYER, assetFrame: 7 });
+    super({
+      ...config,
+      assetKey: CHARACTER_ASSET_KEYS.PLAYER,
+      origin: { x: 0, y: 0.2 },
+      idleFrameConfig: { DOWN: 7, UP: 1, NONE: 7, LEFT: 10, RIGHT: 4 },
+    });
   }
 
   public override moveCharacter(direction: DIRECTION): void {

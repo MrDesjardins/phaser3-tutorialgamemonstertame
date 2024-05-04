@@ -7,7 +7,7 @@ import { Player } from "../world/characters/player";
 import { SCENE_KEYS } from "./sceneKeys";
 
 const PLAYER_POSITION: Coordinate = {
-  x: 0 * TILE_SIZE,
+  x: 1 * TILE_SIZE,
   y: 0 * TILE_SIZE,
 } as const;
 
@@ -33,10 +33,11 @@ export class WorldScene extends Phaser.Scene {
     this.controls = new Controls(this);
   }
 
-  public override update(): void {
+  public override update(time: DOMHighResTimeStamp): void {
     const selectedDirection = this.controls.getDirectionKeyJustPressed();
     if (selectedDirection !== DIRECTION.NONE) {
       this.player.moveCharacter(selectedDirection);
     }
+    this.player.update(time);
   }
 }
