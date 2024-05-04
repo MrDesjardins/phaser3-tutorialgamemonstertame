@@ -26,6 +26,8 @@ export class WorldScene extends Phaser.Scene {
     this.player = new Player({
       scene: this,
       position: PLAYER_POSITION,
+      direction: DIRECTION.DOWN,
+      spriteGridMovementFinishCallback: () => {},
     });
 
     this.controls = new Controls(this);
