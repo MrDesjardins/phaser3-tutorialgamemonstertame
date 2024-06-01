@@ -1,7 +1,7 @@
 {
-  "name": "phaser3-rollup-typescript",
+  "name": "phaser3-tutorialgamemonstertame",
   "version": "1.0.0",
-  "description": "Phaser 3 TypeScript Starter",
+  "description": "Phaser 3 TypeScript Game following Monster Tame Tutorial",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
@@ -13,10 +13,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MrDesjardins/phaser3-rollup-typescript.git"
+    "url": "git+https://github.com/MrDesjardins/phaser3-tutorialgamemonstertame.git"
   },
   "author": "Patrick Desjardins",
-  "homepage": "https://github.com/MrDesjardins/phaser3-rollup-typescript",
+  "homepage": "https://github.com/MrDesjardins/phaser3-tutorialgamemonstertame",
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.0",
     "@rollup/plugin-commonjs": "^25.0.8",
