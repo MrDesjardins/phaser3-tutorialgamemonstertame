@@ -18,6 +18,7 @@ export interface CharacterConfig {
   direction: DIRECTION;
   spriteGridMovementFinishCallback?: () => void;
   idleFrameConfig?: CharacterIdleFrameConfig;
+  collisionLayer?: Phaser.Tilemaps.TilemapLayer;
 }
 export abstract class Character {
   protected scene: Phaser.Scene;
@@ -29,6 +30,7 @@ export abstract class Character {
   protected previousTargetPosition: Coordinate;
   protected spriteGridMovementFinishCallback: (() => void) | undefined;
   protected idleFrameConfig: CharacterIdleFrameConfig | undefined;
+  protected collisionLayer: Phaser.Tilemaps.TilemapLayer | undefined;
   public constructor(config: CharacterConfig) {
     this.scene = config.scene;
     this.direction = config.direction;
@@ -41,6 +43,7 @@ export abstract class Character {
       .sprite(config.position.x, config.position.y, config.assetKey, this.getIdleFrame())
       .setOrigin(this.origin.x, this.origin.y);
     this.spriteGridMovementFinishCallback = config.spriteGridMovementFinishCallback;
+    this.collisionLayer = config.collisionLayer;
   }
 
   get IsMoving() {
@@ -98,7 +101,22 @@ export abstract class Character {
   }
 
   protected isBlockingTile(): boolean {
-    return false;
+    if (this.direction === DIRECTION.NONE) {
+      return false;
+    }
+    const targetPosition = { ...this.targetPosition };
+    const updatedPosition = getTargetPositionFromGameObjectPositionAndDirection(targetPosition, this.direction);
+
+    return this.doestPositionCollideWithTile(updatedPosition);
+  }
+
+  private doestPositionCollideWithTile(position: Coordinate): boolean {
+    if (!this.collisionLayer) {
+      return false;
+    }
+    const { x, y } = position;
+    const tile = this.collisionLayer.getTileAtWorldXY(x, y, true);
+    return tile.index !== -1;
   }
 
   private handleSpriteMovement(): void {

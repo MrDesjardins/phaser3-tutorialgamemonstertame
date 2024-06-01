@@ -1,6 +1,6 @@
 import { WORLD_ASSET_KEYS } from "../assets/assetKeys";
 import { DIRECTION } from "../common/direction";
-import { TILE_SIZE } from "../config";
+import { TILED_COLLISION_DATA, TILE_SIZE } from "../config";
 import { Coordinate } from "../types/typeDef";
 import { Controls } from "../utils/controls";
 import { Player } from "../world/characters/player";
@@ -27,16 +27,30 @@ export class WorldScene extends Phaser.Scene {
     this.cameras.main.setZoom(0.8);
     this.cameras.main.centerOn(x, y);
 
+    const map = this.make.tilemap({ key: WORLD_ASSET_KEYS.WORLD_MAIN_LEVEL });
+    const collisionTiles = map.addTilesetImage("collision", WORLD_ASSET_KEYS.WORLD_COLLISION);
+    if (!collisionTiles) {
+      console.error("Collision Tile Set layer not found");
+      throw new Error("Collision Tile Set layer not found");
+    }
+    const collisionLayer = map.createLayer("Collision", collisionTiles, 0, 0);
+    if (!collisionLayer) {
+      console.error("Collision layer not found");
+      throw new Error("Collision layer not found");
+    }
+    collisionLayer.setAlpha(TILED_COLLISION_DATA).setDepth(2);
     this.add.image(0, 0, WORLD_ASSET_KEYS.WORLD_BACKGROUND, 0).setOrigin(0, 0);
 
     this.player = new Player({
       scene: this,
       position: PLAYER_POSITION,
       direction: DIRECTION.DOWN,
-      spriteGridMovementFinishCallback: () => {},
+      collisionLayer: collisionLayer,
     });
 
     this.cameras.main.startFollow(this.player.Sprite);
+
+    this.add.image(0, 0, WORLD_ASSET_KEYS.WORLD_FORGROUND, 0).setOrigin(0, 0);
 
     this.controls = new Controls(this);
     this.cameras.main.fadeIn(1000, 0, 0, 0);
