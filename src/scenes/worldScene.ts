@@ -3,13 +3,9 @@ import { DIRECTION } from "../common/direction";
 import { TILED_COLLISION_DATA, TILE_SIZE } from "../config";
 import { Coordinate } from "../types/typeDef";
 import { Controls } from "../utils/controls";
+import { DATA_MANAGER_STORE_KEYS, dataManager } from "../utils/dataManager";
 import { Player } from "../world/characters/player";
 import { SCENE_KEYS } from "./sceneKeys";
-
-const PLAYER_POSITION: Coordinate = {
-  x: 6 * TILE_SIZE,
-  y: 21 * TILE_SIZE,
-} as const;
 
 export class WorldScene extends Phaser.Scene {
   private player: Player;
@@ -65,8 +61,8 @@ export class WorldScene extends Phaser.Scene {
     this.add.image(0, 0, WORLD_ASSET_KEYS.WORLD_BACKGROUND, 0).setOrigin(0, 0);
     this.player = new Player({
       scene: this,
-      position: PLAYER_POSITION,
-      direction: DIRECTION.DOWN,
+      position: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_POSITION),
+      direction: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_DIRECTION),
       collisionLayer: collisionLayer,
       spriteGridMovementFinishCallback: () => {
         this.handlePlayerMovementUpdate();
@@ -82,7 +78,7 @@ export class WorldScene extends Phaser.Scene {
   }
 
   public override update(time: DOMHighResTimeStamp): void {
-    if(this.wildMonsterEncounter){
+    if (this.wildMonsterEncounter) {
       this.player.update(time);
       return;
     }
@@ -94,6 +90,11 @@ export class WorldScene extends Phaser.Scene {
   }
 
   private handlePlayerMovementUpdate(): void {
+    dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_POSITION, {
+      x: this.player.Sprite.x,
+      y: this.player.Sprite.y,
+    });
+    dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_DIRECTION, this.player.Direction);
     if (!this.encounterLayer) {
       return;
     }
