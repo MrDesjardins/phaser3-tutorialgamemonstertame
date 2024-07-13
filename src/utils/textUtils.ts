@@ -17,3 +17,6 @@ export function animateText(scene: Phaser.Scene, target: Phaser.GameObjects.Text
     },
   });
 }
+
+export const CANNOT_READ_SIGN_TEXT = "You cannot read the sign from this direction";
+export const SAMPLE_TEXT = "Make sure you talk to npc";
