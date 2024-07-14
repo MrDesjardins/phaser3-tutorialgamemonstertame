@@ -14,7 +14,7 @@ interface GlobalState {
 const initialState: GlobalState = {
   player: {
     position: {
-      x: 6 * TILE_SIZE,
+      x: 3 * TILE_SIZE,
       y: 21 * TILE_SIZE,
     },
     direction: DIRECTION.DOWN,

@@ -101,7 +101,7 @@ export class WorldScene extends Phaser.Scene {
       return;
     }
     const selectedDirection = this.controls.getDirectionKeyPressedDown();
-    if (selectedDirection !== DIRECTION.NONE) {
+    if (selectedDirection !== DIRECTION.NONE && !this.isInputLocked()) {
       this.player.moveCharacter(selectedDirection);
     }
 
@@ -112,11 +112,19 @@ export class WorldScene extends Phaser.Scene {
   }
 
   private handlePlayerInteraction(): void {
-    if (this.dialogUi.isVisisble) {
+    if (this.dialogUi.isAnimationPlaying) {
+      return;
+    }
+    if (this.dialogUi.isVisisble && !this.dialogUi.moreAnimationToShow) {
       this.dialogUi.hideDialogModal();
       return;
     }
-    this.dialogUi.showDialogModal();
+
+    if (this.dialogUi.isVisisble && this.dialogUi.moreAnimationToShow) {
+      this.dialogUi.showNextMessage();
+      return;
+    }
+
     const { x, y } = this.player.Sprite;
     const targetPosition = getTargetPositionFromGameObjectPositionAndDirection({ x, y }, this.player.Direction);
 
@@ -135,7 +143,7 @@ export class WorldScene extends Phaser.Scene {
       if (!usePlaceholderText) {
         textToShow = msg ?? SAMPLE_TEXT;
       }
-      console.log(textToShow);
+      this.dialogUi.showDialogModal([textToShow]);
     }
   }
 
@@ -160,5 +168,9 @@ export class WorldScene extends Phaser.Scene {
         this.scene.start(SCENE_KEYS.BATTLE_SCENE);
       });
     }
+  }
+
+  public isInputLocked(): boolean {
+    return this.dialogUi.isVisisble;
   }
 }

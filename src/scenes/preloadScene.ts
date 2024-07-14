@@ -31,7 +31,7 @@ export class PreloadScene extends Phaser.Scene {
     const kenneysAssetPath = "assets/images/kenneys-assets";
     const pimenAssetPatch = "assets/images/pimen";
     const axulartAssetPath = "assets/images/axulart";
-    const parabellumtAssetPath = "assets/images/parabellum";
+    const pbGamesAssetPath = 'assets/images/parabellum-games';
 
     // Battle
     this.load.image(BATTLE_BACKGROUND_ASSET_KEYS.FOREST, `${monsterTamerAssetPath}/battle-backgrounds/forest-background.png`);
@@ -85,7 +85,8 @@ export class PreloadScene extends Phaser.Scene {
       frameWidth: 64,
       frameHeight: 88,
     });
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC, `${axulartAssetPath}/character.png`, {
+
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC, `${pbGamesAssetPath}/characters.png`, {
       frameWidth: 16,
       frameHeight: 16,
     });

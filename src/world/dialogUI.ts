@@ -1,6 +1,6 @@
 import { UI_ASSET_KEYS } from "../assets/assetKeys";
 import { KENNEY_FUTURE_NARROW_FONT_NAME } from "../assets/fontKeys";
-import { CANNOT_READ_SIGN_TEXT } from "../utils/textUtils";
+import { animateText, CANNOT_READ_SIGN_TEXT } from "../utils/textUtils";
 export const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = {
   fontFamily: KENNEY_FUTURE_NARROW_FONT_NAME,
   color: "black",
@@ -40,7 +40,16 @@ export class DialogUi {
     return this.isVisible;
   }
 
-  public showDialogModal(): void {
+  public get isAnimationPlaying(): boolean {
+    return this.textAnimationPlaying;
+  }
+
+  public get moreAnimationToShow(): boolean {
+    return this.messagesToShow.length > 0;
+  }
+
+  public showDialogModal(text: string[]): void {
+    this.messagesToShow = text;
     const { x, bottom } = this.scene.cameras.main.worldView;
     const startX = x + this.padding;
     const startY = bottom - this.height - this.padding / 4;
@@ -49,6 +58,8 @@ export class DialogUi {
     this.userInputCursorTween?.restart();
     this.container.setAlpha(1);
     this.isVisible = true;
+
+    this.showNextMessage();
   }
 
   public hideDialogModal(): void {
@@ -78,5 +89,22 @@ export class DialogUi {
     });
     this.userInputCursorTween.pause();
     this.container.add(this.userInputCursor);
+  }
+
+  public showNextMessage(): void {
+    if (this.messagesToShow.length === 0) {
+      return;
+    }
+    this.uiText?.setText("").setAlpha(1);
+    const nextMessage = this.messagesToShow.shift();
+    if (this.uiText && nextMessage) {
+      animateText(this.scene, this.uiText, nextMessage, {
+        delay: 50,
+        callback: () => {
+          this.textAnimationPlaying = false;
+        },
+      });
+    }
+    this.textAnimationPlaying = true;
   }
 }
